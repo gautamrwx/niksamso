@@ -1,13 +1,14 @@
 import React from 'react';
 import { Button } from 'rsuite';
+import { useNavigate  } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from '../misc/firebase';
 
 function SignIn() {
+    const navigate = useNavigate();
 
     const signInWithProvider = async provider => {
-        debugger;
         signInWithPopup(auth, provider).then((result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
@@ -16,6 +17,7 @@ function SignIn() {
             const user = result.user;
             // IdP data available using getAdditionalUserInfo(result)
             // ...
+            navigate("dashboard");
         }).catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
@@ -34,6 +36,7 @@ function SignIn() {
 
     return (
         <div>
+             <h1>SignIn</h1>
             <div className="mt-3">
                 <Button block color="blue" onClick={onGoogleSignIn} >
                     <FcGoogle /> Login With Google
