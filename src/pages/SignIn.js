@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { auth } from '../misc/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import LinearProgress from '@mui/material/LinearProgress';
 
 function SignIn() {
     const [userFormData, setUserFormData] = useState({
@@ -9,9 +10,11 @@ function SignIn() {
         "password": "Windows11",
         "confirmPasswd": "Windows11"
     });
+    const [isLoginInProgress, setIsLoginInProgress] = useState(false);
 
     const onUserSignIn = (event) => {
         event.preventDefault();
+        setIsLoginInProgress(true);
 
         signInWithEmailAndPassword(auth, userFormData.email, userFormData.password)
             .then((userCredential) => {
@@ -20,6 +23,7 @@ function SignIn() {
             .catch((error) => {
                 const errorCode = error.code;
                 //const errorMessage = error.message;
+                setIsLoginInProgress(false);
                 alert(errorCode);
             });
     }
@@ -54,6 +58,9 @@ function SignIn() {
 
                     <input value="Submit" type='submit' />
                 </form>
+
+
+                {isLoginInProgress && <LinearProgress />}
 
                 <Link to="/SetPassword" className="btn btn-primary">Set Password</Link>
             </div>

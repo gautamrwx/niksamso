@@ -3,6 +3,7 @@ import { onValue, ref, update, push, child, off } from 'firebase/database';
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { db, auth } from '../misc/firebase';
 import md5 from 'md5';
+import LinearProgress from '@mui/material/LinearProgress';
 
 function SetPassword() {
     const [userFormData, setUserFormData] = useState({
@@ -10,13 +11,16 @@ function SetPassword() {
         "password": "Windows11",
         "confirmPasswd": "Windows11"
     });
+    const [isSignUpInProgress, setIsSignUpInProgress] = useState(false);
 
     const onUserDataFormSubmit = (event) => {
         event.preventDefault();
+        setIsSignUpInProgress(true);
 
         // Step 1. Verify Inputs 
         if (userFormData.password !== userFormData.confirmPasswd) {
-            return
+            setIsSignUpInProgress(false);
+            return;
         }
 
         // Step 2. Check If Current User is in Unregisted List
@@ -46,7 +50,7 @@ function SetPassword() {
                     .catch((error) => {
                         const errorCode = error.code;
                         // const errorMessage = error.message;
-
+                        setIsSignUpInProgress(false);
                         alert(errorCode);
                     });
             }
@@ -124,6 +128,8 @@ function SetPassword() {
 
                 <input value="Submit" type='submit' />
             </form>
+
+            {isSignUpInProgress && <LinearProgress />}
         </>
     );
 }
