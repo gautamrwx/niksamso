@@ -17,7 +17,6 @@ function Dashboard(props) {
         <>
             <h1>User Dashboard</h1>
             <button onClick={logoff}>Logout</button>
-            {/* <button onClick={sendData}>Apply Data</button> */}
         </>
     );
 }
