@@ -1,8 +1,8 @@
 import { Navigate, Outlet } from 'react-router-dom';
+import { useProfile } from '../context/profile.context';
 
 const PrivateRoute = () => {
-    const profile = false;
-    const isLoading = false;
+    const { profile, isLoading } = useProfile();
 
     if (!profile && isLoading) {
         return; //wait
