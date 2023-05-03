@@ -4,12 +4,10 @@ import { auth } from '../misc/firebase';
 const profileContext = createContext();
 
 export const ProfileProvider = ({ children }) => {
-    const [profile, setProfile] = useState("null");
+    const [profile, setProfile] = useState(null);
     const [isLoading, setisLoading] = useState(true);
 
     useEffect(() => {
-        let useRef;
-
         const authUnsub = auth.onAuthStateChanged(authObj => {
             if (authObj) {
 
@@ -26,13 +24,8 @@ export const ProfileProvider = ({ children }) => {
                 setisLoading(false);
             }
         });
-        return () => {
-            authUnsub();
 
-            if (useRef) {
-                useRef.off();
-            }
-        };
+        return () => { authUnsub() };
     }, []);
 
     return (

@@ -56,6 +56,7 @@ function SetPassword() {
             }
             else {
                 alert("Contact Admin To Assign User");
+                setIsSignUpInProgress(false);
             }
         });
     }
