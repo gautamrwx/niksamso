@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import SignIn from './pages/SignIn'
-import SetPassword from './pages/SetPassword';
+import AccountSetup from './pages/AccountSetup';
 import Dashboard from './pages/Dashboard';
 import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
@@ -14,7 +14,7 @@ function App() {
         {/* Public Routes  */}
         <Route element={<PublicRoute />}>
           <Route path="/SignIn" element={<SignIn />} exact />
-          <Route path="/SetPassword" element={<SetPassword />} exact />
+          <Route path="/AccountSetup" element={<AccountSetup />} exact />
         </Route>
 
         {/* Secure Private Routes */}

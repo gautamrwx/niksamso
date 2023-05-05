@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import logoff from '../misc/logOut';
-import { AppBar, Avatar, Box, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Select, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
-import { Divider } from 'rsuite';
+import { AppBar, Avatar, Box, Divider, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Select, Tab, Tabs, Toolbar, Tooltip, Typography } from '@mui/material';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import GroupIcon from '@mui/icons-material/Group';

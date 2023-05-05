@@ -1,31 +1,39 @@
 import { useState } from 'react';
 import { auth } from '../misc/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { Alert, Box, Button, CircularProgress, Container, Snackbar, TextField } from '@mui/material';
+import { Alert, Box, Button, CircularProgress, Container, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar, TextField } from '@mui/material';
 import logo from '../images/logo.png'
-import { Lock } from '@mui/icons-material';
+import { Lock, Visibility, VisibilityOff } from '@mui/icons-material';
 import { emailValidator, passwordValidator } from '../misc/emailPasswordValidator';
+import { Link } from 'react-router-dom';
 
 function SignIn() {
   const [userFormData, setUserFormData] = useState({
-    "email": "bob@test.in",
-    "password": "Windows11"
+    email: "bob@test.in",
+    password: "Windows11",
   });
-  const [isLoginInProgress, setIsLoginInProgress] = useState(false);
-  const [isFeedbackSnackbarOpen, setIsFeedbackSnackbarOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
   const [userInputValidation, setuserInputValidation] = useState({
     isCorrectEmail: true,
     isCorrectPassword: true
   });
+  const [isLoginInProgress, setIsLoginInProgress] = useState(false);
+  const [isSnackbarOpen, setIsSnackbarOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleUserInputChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setUserFormData(values => ({ ...values, [name]: value }))
+  }
 
   const onShowSnackbarMessage = (message) => {
-    setIsFeedbackSnackbarOpen(true);
+    setIsSnackbarOpen(true);
     setAlertMessage(message);
   }
 
   const onHideSnackbarMessage = () => {
-    setIsFeedbackSnackbarOpen(false);
+    setIsSnackbarOpen(false);
   }
 
   const onUserSignIn = (event) => {
@@ -57,7 +65,7 @@ function SignIn() {
     setIsLoginInProgress(true);
     signInWithEmailAndPassword(auth, userFormData.email, userFormData.password)
       .then((userCredential) => {
-        // Do Nothing
+        // Do Nothing - Page will be Auto Redirected To DashBoard
       })
       .catch((error) => {
         setIsLoginInProgress(false);
@@ -82,12 +90,6 @@ function SignIn() {
           isCorrectPassword: false
         });
       });
-  }
-
-  const handleUserInputChange = (event) => {
-    const name = event.target.name;
-    const value = event.target.value;
-    setUserFormData(values => ({ ...values, [name]: value }))
   }
 
   return (
@@ -116,20 +118,37 @@ function SignIn() {
             name="email"
             value={userFormData.email || ""}
             onChange={handleUserInputChange}
-            autoFocus
           />
-          <TextField
+
+          <FormControl
             margin='normal'
-            error={!userInputValidation.isCorrectPassword}
             fullWidth
             required
-            inputProps={{ maxLength: 12 }}
-            name="password"
-            label="Password"
-            type="password"
-            value={userFormData.password || ""}
+            error={!userInputValidation.isCorrectPassword}
             onChange={handleUserInputChange}
-          />
+            variant="outlined">
+            <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              inputProps={{ maxLength: 12 }}
+              name="password"
+              value={userFormData.password || ""}
+              type={showPassword ? 'text' : 'password'}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => { setShowPassword(!showPassword) }}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+            />
+          </FormControl>
+
           <Button
             type="submit"
             variant="contained"
@@ -147,6 +166,8 @@ function SignIn() {
         </Box>
 
         <Button
+          component={Link}
+          to="/AccountSetup"
           type="button"
           variant="outlined"
           fullWidth
@@ -160,7 +181,7 @@ function SignIn() {
             vertical: 'bottom',
             horizontal: 'center'
           }}
-          open={isFeedbackSnackbarOpen}
+          open={isSnackbarOpen}
           onClose={onHideSnackbarMessage}
         >
           <Alert severity="error">{alertMessage}</Alert>
