@@ -27,14 +27,14 @@ function NavigationDrawer({ linkPageMappings, container, isDrowerOpen, setIsDraw
                     onClick={handleNavDrawerBoxPress}
                     sx={{ textAlign: 'center' }}                >
                     <Box
-                        width={150}
+                        width={130}
                         component="img"
                         src={logo} />
                     <Divider />
                     <List>
                         {linkPageMappings.map((item) => (
                             item.visibleInNavBar &&
-                            <ListItem key={item} disablePadding>
+                            <ListItem key={item.linkPath} disablePadding>
                                 <ListItemButton
                                     disabled={item.isLinkActive}
                                     sx={{
