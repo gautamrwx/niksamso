@@ -2,9 +2,11 @@ import { AppBar, Box, Divider, Drawer, FormControl, IconButton, InputLabel, List
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import GroupIcon from '@mui/icons-material/Group';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import NavigationDrawer from './innterComponents/NavigationDrawer';
 import UserProfileActionAvatar from './innterComponents/UserProfileActionAvatar';
+import { useLocation } from 'react-router-dom';
+import linkPageMappingHelper from '../../misc/linkPageMappingHelper';
 
 function DashboardAppBar({ props }) {
     // Container Will Use in App Drawer
@@ -14,9 +16,18 @@ function DashboardAppBar({ props }) {
     const [villageDropDownData, setVillageDropDownData] = useState(null);
     const [selectedVillageKey, setSelctedVillageKey] = useState('');
     const [isDrowerOpen, setIsDrawerOpen] = useState(false);
-
     const [selectedBar, setSelectedBar] = useState(0);
+    const [linkPageMappings, setLinkPageMappings] = useState([]);
+    const location = useLocation();
 
+    // Set Page-Path Name and Link to help Navigation Bar 
+    useEffect(() => {
+        const currentPath = location.pathname;
+        const linkAndPagesWithActiveStatus = linkPageMappingHelper(currentPath)
+        setLinkPageMappings(linkAndPagesWithActiveStatus);
+    }, [])
+
+    //==>  Business Logic Start <=== 
     const handleVillageSelectionChange = (event) => {
         const villageKey = event.target.value
         setSelctedVillageKey(villageKey);
@@ -26,6 +37,7 @@ function DashboardAppBar({ props }) {
     const handleMemberTabBarChange = (event, newValue) => {
         setSelectedBar(newValue);
     }
+    //==>  Business Logic End <=== 
 
     return (
         <>
@@ -77,6 +89,7 @@ function DashboardAppBar({ props }) {
 
             {/* Navigation Drawer  */}
             <NavigationDrawer
+                linkPageMappings={linkPageMappings}
                 setIsDrawerOpen={setIsDrawerOpen}
                 isDrowerOpen={isDrowerOpen}
                 container={container} />

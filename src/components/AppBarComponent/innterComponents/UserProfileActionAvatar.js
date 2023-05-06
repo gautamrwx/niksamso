@@ -2,11 +2,13 @@ import { Avatar, Box, Divider, IconButton, Menu, MenuItem, Tooltip, Typography }
 import { useProfile } from '../../../context/profile.context';
 import { useState } from 'react';
 import logoff from '../../../misc/logOut';
+import { useNavigate } from 'react-router-dom';
 
 const settings = ['My Account', 'Logout'];
 
 function UserProfileActionAvatar() {
     const { profile } = useProfile();
+    const navigate  = useNavigate();
 
     const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -21,6 +23,9 @@ function UserProfileActionAvatar() {
             switch (seletedMenu) {
                 case "Logout":
                     logoff();
+                    break;
+                case "My Account":
+                    navigate('/MyAccount');
                     break;
                 default:
                     break;

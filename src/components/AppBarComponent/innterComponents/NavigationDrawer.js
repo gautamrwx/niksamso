@@ -1,11 +1,10 @@
-import { AppBar, Box, Divider, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Select, Tab, Tabs, Toolbar } from '@mui/material';
+import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import logo from '../../../images/logo.png'
 import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
-const navItems = ['Home', 'About', 'Contact'];
 
-function NavigationDrawer({ container, isDrowerOpen, setIsDrawerOpen }) {
+function NavigationDrawer({ linkPageMappings, container, isDrowerOpen, setIsDrawerOpen }) {
     const handleNavDrawerBoxPress = () => {
         setIsDrawerOpen((prevState) => !prevState);
     }
@@ -32,15 +31,22 @@ function NavigationDrawer({ container, isDrowerOpen, setIsDrawerOpen }) {
                         component="img"
                         src={logo} />
                     <Divider />
-
                     <List>
-                        {navItems.map((item) => (
+                        {linkPageMappings.map((item) => (
+                            item.visibleInNavBar &&
                             <ListItem key={item} disablePadding>
                                 <ListItemButton
-                                    to="/manageVillage"
-                                    sx={{ textAlign: 'center' }}
+                                    disabled={item.isLinkActive}
+                                    sx={{
+                                        "&.Mui-disabled": {
+                                            backgroundColor: "#1769aa",
+                                            color: "white"
+                                        }
+                                    }}
+                                    component={Link}
+                                    to={item.linkPath}
                                 >
-                                    <ListItemText primary={item} />
+                                    <ListItemText primary={item.linkPageName} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
