@@ -1,4 +1,4 @@
-import { AppBar, Box, Divider, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemButton, ListItemText, Menu, MenuItem, Select, Tab, Tabs, Toolbar } from '@mui/material';
+import { AppBar, Box, FormControl, IconButton, InputLabel, MenuItem, Select, Tab, Tabs, Toolbar, } from '@mui/material';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import GroupIcon from '@mui/icons-material/Group';
@@ -9,18 +9,23 @@ import { useLocation } from 'react-router-dom';
 import linkPageMappingHelper from '../../misc/linkPageMappingHelper';
 import HeaderLogoAndText from './innterComponents/HeaderLogoAndText';
 
-function DashboardAppBar({ props }) {
+function DashboardAppBar({
+    props,
+    villageDropDownData,
+    selectedVillageKey,
+    handleVillageSelectionChange,
+    selectedTabBarIndex,
+    setSelectedTabBarIndex }) {
+
     // Container Will Use in App Drawer
     const { window } = props;
     const container = window !== undefined ? () => window().document.body : undefined;
 
-    const [villageDropDownData, setVillageDropDownData] = useState(null);
-    const [selectedVillageKey, setSelctedVillageKey] = useState('');
+    const location = useLocation();
+
     const [isDrowerOpen, setIsDrawerOpen] = useState(false);
-    const [selectedBar, setSelectedBar] = useState(0);
     const [linkPageMappings, setLinkPageMappings] = useState([]);
     const [currentPageName, setCurrentPageName] = useState(null);
-    const location = useLocation();
 
     // Set Page-Path Name and Link to help Navigation Bar 
     useEffect(() => {
@@ -30,19 +35,7 @@ function DashboardAppBar({ props }) {
 
         const pageName = linkAndPagesWithActiveStatus.find(x => x.isLinkActive);
         setCurrentPageName(pageName.linkPageName);
-    }, [])
-
-    //==>  Business Logic Start <=== 
-    const handleVillageSelectionChange = (event) => {
-        const villageKey = event.target.value
-        setSelctedVillageKey(villageKey);
-        //fetchVillagePartyMembers(villageKey);
-    };
-
-    const handleMemberTabBarChange = (event, newValue) => {
-        setSelectedBar(newValue);
-    }
-    //==>  Business Logic End <=== 
+    }, [location.pathname]);
 
     return (
         <>
@@ -84,7 +77,12 @@ function DashboardAppBar({ props }) {
                 {/* Next Line  */}
                 {/* Party Members Tab Bar  */}
                 <Box sx={{ background: 'white' }}>
-                    <Tabs value={selectedBar} onChange={handleMemberTabBarChange} aria-label="basic tabs example">
+                    <Tabs
+                        value={selectedTabBarIndex}
+                        onChange={(event, newValue) => {
+                            setSelectedTabBarIndex(newValue);
+                        }}
+                        aria-label="basic tabs example">
                         <Tab icon={<ContactPhoneIcon />} iconPosition="start" label="Party Workers" />
                         <Tab icon={<GroupIcon />} iconPosition="start" label="Party Members" />
                     </Tabs>

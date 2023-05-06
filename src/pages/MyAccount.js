@@ -6,9 +6,9 @@ function MyAccount(props) {
         <>
             <SimpleAppBar props={props} />
 
-           <Container>
-            Hi
-           </Container>
+            <Container>
+                My Account
+            </Container>
         </>
     );
 }
