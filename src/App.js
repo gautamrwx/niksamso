@@ -20,6 +20,7 @@ function App() {
         {/* Secure Private Routes */}
         <Route element={<PrivateRoute />}>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/manageVillageMembers" element={<Dashboard />} />
         </Route>
       </Routes >
     </ProfileProvider>
