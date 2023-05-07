@@ -79,7 +79,7 @@ function AccountSetup() {
     // Step 2. Check If Current User is in Unregisted List
     let unRegisteredUserKey = md5(userFormData.email); // We using Email(md5) as primary key of Firebase 
 
-    get(child(ref(db), 'unRegistedUsers/' + unRegisteredUserKey)).then((snapshot) => {
+    get(child(ref(db), 'nonRegistedUsers/' + unRegisteredUserKey)).then((snapshot) => {
       const data = snapshot.val();
       if (data) {
         // Get Village Array (for Cureent User) From Response 
@@ -122,18 +122,18 @@ function AccountSetup() {
     updates['/users/' + user.uid] = profileInfo
 
     // 2. Assign Villages
-    const newVillageGroupKey = push(child(ref(db), 'villageListData')).key;
+    const newVillageGroupKey = push(child(ref(db), 'villageGroupList')).key;
 
     assignedVillages.forEach(villageName => {
-      const newVillageKey = push(child(ref(db), 'villageListData/' + newVillageGroupKey)).key;
-      updates['/villageListData/' + newVillageGroupKey + '/' + newVillageKey] = villageName;
+      const newVillageKey = push(child(ref(db), 'villageGroupList/' + newVillageGroupKey)).key;
+      updates['/villageGroupList/' + newVillageGroupKey + '/' + newVillageKey] = villageName;
     });
 
-    // 3. Map User With VillageListData
-    updates['/mapping-User-villageListData/' + user.uid] = newVillageGroupKey;
+    // 3. Map User With villageGroupList
+    updates['/mapping_users_villageGroupList/' + user.uid] = newVillageGroupKey;
 
     // 4. User Has been Regitered , Now Delete Unregistered User from Database 
-    updates['/unRegistedUsers/' + unRegisteredUserKey] = null;
+    updates['/nonRegistedUsers/' + unRegisteredUserKey] = null;
 
     // <==== | Update All Data In Single Shot | ====>
     update(ref(db), updates).then(x => {

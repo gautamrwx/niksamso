@@ -1,4 +1,4 @@
-import { AppBar, Box, FormControl, IconButton, InputLabel, MenuItem, Select, Tab, Tabs, Toolbar, } from '@mui/material';
+import { AppBar, Box, CircularProgress, FormControl, IconButton, InputLabel, LinearProgress, MenuItem, Select, Tab, Tabs, Toolbar, } from '@mui/material';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import ContactPhoneIcon from '@mui/icons-material/ContactPhone';
 import GroupIcon from '@mui/icons-material/Group';
@@ -13,6 +13,7 @@ function DashboardAppBar({
     props,
     villageDropDownData,
     selectedVillageKey,
+    isLoadingVillageList,
     handleVillageSelectionChange,
     selectedTabBarIndex,
     setSelectedTabBarIndex }) {
@@ -58,17 +59,21 @@ function DashboardAppBar({
                     <Box sx={{ flexGrow: 1 }}></Box>
 
                     {/* ==> Village Selection DropDown  */}
-                    <FormControl className='selectItemOnAppBar' sx={{ width: { xs: 3 / 5, sm: 240 } }} size="small">
-                        <InputLabel>Village</InputLabel>
-                        <Select
-                            value={selectedVillageKey}
-                            label="Village"
-                            onChange={handleVillageSelectionChange}
-                        >
-                            {villageDropDownData && villageDropDownData.map(vill => <MenuItem key={vill.key} value={vill.key}>{vill.val}</MenuItem>)}
+                    <Box sx={{ width: { xs: 3 / 5, sm: 240, md: 340 }, ml: 1 }}>
+                        <FormControl className='selectItemOnAppBar' fullWidth size="small">
+                            <InputLabel>Village</InputLabel>
+                            <Select
+                                disabled={isLoadingVillageList}
+                                value={selectedVillageKey}
+                                label="Village"
+                                onChange={handleVillageSelectionChange}
+                            >
+                                {villageDropDownData && villageDropDownData.map(vill => <MenuItem key={vill.key} value={vill.key}>{vill.val}</MenuItem>)}
+                            </Select>
+                        </FormControl>
 
-                        </Select>
-                    </FormControl>
+                        {isLoadingVillageList && <LinearProgress />}
+                    </Box >
 
                     {/* ==> User Profile Avatar  */}
                     <UserProfileActionAvatar />
@@ -89,8 +94,7 @@ function DashboardAppBar({
                 </Box>
             </AppBar >
 
-            <Toolbar />
-            <Tabs />
+            <Box component={Toolbar} p={0} height={130} />
 
             {/* Navigation Drawer  */}
             <NavigationDrawer
