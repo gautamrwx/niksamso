@@ -88,13 +88,13 @@ function DashboardAppBar({
                             setSelectedTabBarIndex(newValue);
                         }}
                         aria-label="basic tabs example">
-                        <Tab icon={<ContactPhoneIcon />} iconPosition="start" label="Party Workers" />
-                        <Tab icon={<GroupIcon />} iconPosition="start" label="Party Members" />
+                        <Tab icon={<ContactPhoneIcon />} iconPosition="start" label="Party Members" />
+                        <Tab icon={<GroupIcon />} iconPosition="start" label="General Members" />
                     </Tabs>
                 </Box>
             </AppBar >
 
-            <Box component={Toolbar} p={0} height={130} />
+            <Box component={Toolbar} p={0} height={135} />
 
             {/* Navigation Drawer  */}
             <NavigationDrawer

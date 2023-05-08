@@ -56,19 +56,77 @@ function ManageVillageMembers(props) {
         const peopleInformation = {
             partyMembers: [
                 {
-                    post: '',
-                    name: '',
-                    age: '',
-                    mobileNumber: [],
-                    youthGeneral: ''
+                    post: 'Village Party President ',
+                    name: 'Ram',
+                    age: '33',
+                    mobileNumber: [99,55,66,66],
+                    youthGeneral: 'Youth'
+                },
+                {
+                    post: 'Village Party President ',
+                    name: 'Ram',
+                    age: '33',
+                    mobileNumber: [99,55,66,66],
+                    youthGeneral: 'General'
+                },
+                {
+                    post: 'Village Party President ',
+                    name: 'Ram',
+                    age: '33',
+                    mobileNumber: [99,55,66,66],
+                    youthGeneral: 'Youth'
+                },
+                {
+                    post: 'Village Party President ',
+                    name: 'Ram',
+                    age: '33',
+                    mobileNumber: [99,55,66,66],
+                    youthGeneral: 'Youth'
+                },
+                {
+                    post: 'Village Party President ',
+                    name: 'Ram',
+                    age: '33',
+                    mobileNumber: [99,55,66,66],
+                    youthGeneral: 'Youth'
                 }
             ],
             generalMembers: [
                 {
-                    name: '',
-                    age: '',
-                    mobileNumber: [],
-                    youthGeneral: ''
+                    name: 'Mohan',
+                    age: '33',
+                    mobileNumber: [22,55],
+                    youthGeneral: 'General'
+                },
+                {
+                    name: 'Mohan',
+                    age: '33',
+                    mobileNumber: [22,55],
+                    youthGeneral: 'Youth'
+                },
+                {
+                    name: 'Mohan',
+                    age: '33',
+                    mobileNumber: [22,55],
+                    youthGeneral: 'General'
+                },
+                {
+                    name: 'Mohan',
+                    age: '33',
+                    mobileNumber: [22,55],
+                    youthGeneral: 'General'
+                },
+                {
+                    name: 'Mohan',
+                    age: '33',
+                    mobileNumber: [22,55],
+                    youthGeneral: 'General'
+                },
+                {
+                    name: 'Mohan',
+                    age: '33',
+                    mobileNumber: [22,55],
+                    youthGeneral: 'General'
                 }
             ]
         }
@@ -77,9 +135,6 @@ function ManageVillageMembers(props) {
     }
 
     const upload = (key) => {
-        //upload(x.key)
-        // New entry party meber
-        // 2. Assign Villages
         const updates = {};
 
         const newPartyPerson = push(child(ref(db), 'peopleInformation')).key;
@@ -90,7 +145,7 @@ function ManageVillageMembers(props) {
         update(ref(db), updates).then(x => {
             // Do Nothing
         }).catch((error) => {
-            alert("User Created Without Database | Contact Admin To register Again");
+            alert("Error  Update");
         });
 
         // assign relational data

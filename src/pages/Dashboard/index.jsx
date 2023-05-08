@@ -23,6 +23,7 @@ function Dashboard(props) {
     const handleVillageSelectionChange = (event) => {
         const villageKey = event.target.value
         setSelctedVillageKey(villageKey);
+        setPartyPeoples(null);
         fetchVillagePartyPeoples(villageKey);
     };
 
