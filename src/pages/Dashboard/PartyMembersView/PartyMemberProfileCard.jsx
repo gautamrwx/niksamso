@@ -8,7 +8,8 @@ import cover from '../../../images/cover.jpg';
 
 
 function PartyMemberProfileCard({
-    memberProfileData
+    memberProfileData,
+    openContactDrawer
 }) {
     return (
         <Card sx={{ minHeight: 120 }}>
@@ -56,7 +57,7 @@ function PartyMemberProfileCard({
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button fullWidth size="small">
+                <Button onClick={() => { openContactDrawer('Abcd') }} fullWidth size="small">
                     <SmsOutlined />
                     <LocalPhoneOutlined />
                     <WhatsApp />

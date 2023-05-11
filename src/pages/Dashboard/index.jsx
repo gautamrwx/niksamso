@@ -8,6 +8,9 @@ import TabPanel from './TabPanel';
 import BlankTextProcessingDisplay from './BlankTextProcessingDisplay';
 import GeneralMembersView from './GeneralMembersView';
 import PartyMembersView from './PartyMembersView';
+import { Box, Button, Container, Drawer, IconButton, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Call, InsertChartOutlined, Message, WhatsApp } from '@mui/icons-material';
+import { Link } from 'react-router-dom';
 
 function Dashboard(props) {
     const { profile } = useProfile();
@@ -19,6 +22,28 @@ function Dashboard(props) {
 
     const [isLoadingVillageList, setIsLoadingVillageList] = useState(null);
     const [isLoadingPartyPeoples, setIsLoadingPartyPeoples] = useState(null);
+
+    const [isContactDrawerOpen, setIsContactDrawerOpen] = useState(false);
+
+    const openContactDrawer = (profileContactData) => {
+        setIsContactDrawerOpen(true);
+    }
+
+    const handleContactAction = (contactType, contactNumber) => {
+        switch (contactType) {
+            case 'ACTION_CALL':
+
+                break;
+            case 'ACTION_WHATSAPP':
+
+                break;
+            case 'ACTION_MESSAGE':
+
+                break;
+            default:
+                break;
+        }
+    }
 
     const handleVillageSelectionChange = (event) => {
         const villageKey = event.target.value
@@ -112,7 +137,9 @@ function Dashboard(props) {
 
             <TabPanel value={selectedTabBarIndex} index={0}>
                 {(partyPeoples && partyPeoples.partyMembers.length > 0)
-                    ? <PartyMembersView members={partyPeoples.partyMembers} />
+                    ? <PartyMembersView
+                        members={partyPeoples.partyMembers}
+                        openContactDrawer={openContactDrawer} />
                     : <BlankTextProcessingDisplay
                         selectedVillageKey={selectedVillageKey}
                         isLoadingPartyPeoples={isLoadingPartyPeoples}
@@ -129,6 +156,47 @@ function Dashboard(props) {
                     />
                 }
             </TabPanel>
+
+
+
+            <Drawer
+                anchor={'bottom'}
+                open={isContactDrawerOpen}
+                onClose={() => setIsContactDrawerOpen(false)}
+            >
+                <Container maxWidth="xs">
+                    <Box>
+                        <Typography ml={2} mt={2} fontSize={24}>
+                            Ram Shayam
+                        </Typography>
+
+                        <List >
+                            {[1, 2, 3].map((x) =>
+                                <ListItem
+                                    sx={{ pt: 1.5, pb: 1.5 }}
+                                    secondaryAction={
+                                        <>
+                                            <IconButton onClick={handleContactAction('ACTION_', '+9122222')} sx={{ color: 'blue' }} >
+                                                <Call />
+                                            </IconButton>
+                                            <IconButton sx={{ color: 'green' }} >
+                                                <WhatsApp />
+                                            </IconButton>
+                                            <IconButton  component={Link} to="tel:5551234567"  sx={{ color: 'pink' }} >
+                                                <Message />
+                                            </IconButton>
+                                        </>
+                                    }
+                                >
+                                    <ListItemText primary="+91987875745" />
+                                </ListItem>
+                            )}
+                        </List>
+                    </Box>
+                </Container>
+            </Drawer>
+
+
         </>
     );
 }

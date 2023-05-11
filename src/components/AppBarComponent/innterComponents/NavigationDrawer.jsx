@@ -1,4 +1,4 @@
-import { Box, Divider, Drawer, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import { Box, Divider, List, ListItem, ListItemButton, ListItemText, SwipeableDrawer, } from '@mui/material';
 import logo from '../../../images/logo.png'
 import { Link } from 'react-router-dom';
 
@@ -11,11 +11,12 @@ function NavigationDrawer({ linkPageMappings, container, isDrowerOpen, setIsDraw
 
     return (
         <Box component="nav">
-            <Drawer
+            <SwipeableDrawer
                 container={container}
                 variant="temporary"
                 open={isDrowerOpen}
                 onClose={() => { setIsDrawerOpen((prevState) => !prevState) }}
+                onOpen={() => { setIsDrawerOpen((prevState) => !prevState) }}
                 ModalProps={{
                     keepMounted: true, // Better open performance on mobile.
                 }}
@@ -52,7 +53,7 @@ function NavigationDrawer({ linkPageMappings, container, isDrowerOpen, setIsDraw
                         ))}
                     </List>
                 </Box>
-            </Drawer>
+            </SwipeableDrawer>
         </Box>
     )
 }
