@@ -64,7 +64,7 @@ function ManageVillageMembers(props) {
                 },
                 {
                     post: 'Village Party President ',
-                    name: 'Ram',
+                    name: 'Ram Shyam',
                     age: '33',
                     mobileNumber: [99,55,66,66],
                     youthGeneral: 'General'
@@ -78,7 +78,7 @@ function ManageVillageMembers(props) {
                 },
                 {
                     post: 'Village Party President ',
-                    name: 'Ram',
+                    name: ' Mohan Kumar Chaudhry',
                     age: '33',
                     mobileNumber: [99,55,66,66],
                     youthGeneral: 'Youth'
