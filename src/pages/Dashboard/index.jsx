@@ -8,12 +8,15 @@ import TabPanel from './TabPanel';
 import BlankTextProcessingDisplay from './BlankTextProcessingDisplay';
 import GeneralMembersView from './GeneralMembersView';
 import PartyMembersView from './PartyMembersView';
-import { Box, Button, Container, Drawer, IconButton, List, ListItem, ListItemText, Typography } from '@mui/material';
-import { Call, InsertChartOutlined, Message, WhatsApp } from '@mui/icons-material';
+import { Box, Container, Drawer, IconButton, List, ListItem, ListItemText, Typography, } from '@mui/material';
+import { Call, Message, WhatsApp } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 
 function Dashboard(props) {
     const { profile } = useProfile();
+
+    //const navigate = useNavigate();
 
     const [partyPeoples, setPartyPeoples] = useState(null);
     const [villageDropDownData, setVillageDropDownData] = useState([]);
@@ -23,22 +26,47 @@ function Dashboard(props) {
     const [isLoadingVillageList, setIsLoadingVillageList] = useState(null);
     const [isLoadingPartyPeoples, setIsLoadingPartyPeoples] = useState(null);
 
-    const [isContactDrawerOpen, setIsContactDrawerOpen] = useState(false);
+    const [contactDrawerInfo, setContactDrawerInfo] = useState({
+        isOpen: false,
+        name: '',
+        phoneNumbers: []
+    });
 
     const openContactDrawer = (profileContactData) => {
-        setIsContactDrawerOpen(true);
+        setContactDrawerInfo({
+            isOpen: true,
+            name: profileContactData.name,
+            phoneNumbers: profileContactData.phoneNumbers
+        });
+    }
+
+    const closeContactDrawer = (profileContactData) => {
+        setContactDrawerInfo({
+            isOpen: false,
+            name: '',
+            phoneNumbers: []
+        });
     }
 
     const handleContactAction = (contactType, contactNumber) => {
-        switch (contactType) {
-            case 'ACTION_CALL':
+        let isCordovaExitst
 
+        try {
+            isCordovaExitst = !!window.cordova;
+        } catch {
+            isCordovaExitst = false
+        }
+
+        switch (contactType) {
+            case 'ACTION_SMS':
+                isCordovaExitst
+                    ? window.plugins.socialsharing.shareViaSMS("", contactNumber, function (msg) { }, function (msg) { })
+                    : (() => null)() //navigate('sms:' + contactNumber);
                 break;
             case 'ACTION_WHATSAPP':
-
-                break;
-            case 'ACTION_MESSAGE':
-
+                isCordovaExitst
+                    ? window.plugins.socialsharing.shareViaWhatsAppToPhone(contactNumber, "", null, null, function () { })
+                    : (() => null)() //navigate('sms:' + contactNumber);
                 break;
             default:
                 break;
@@ -149,7 +177,8 @@ function Dashboard(props) {
 
             <TabPanel value={selectedTabBarIndex} index={1}>
                 {(partyPeoples && partyPeoples.generalMembers.length > 0)
-                    ? <GeneralMembersView members={partyPeoples.generalMembers} />
+                    ? <GeneralMembersView members={partyPeoples.generalMembers}
+                        openContactDrawer={openContactDrawer} />
                     : <BlankTextProcessingDisplay
                         selectedVillageKey={selectedVillageKey}
                         isLoadingPartyPeoples={isLoadingPartyPeoples}
@@ -157,38 +186,37 @@ function Dashboard(props) {
                 }
             </TabPanel>
 
-
-
             <Drawer
                 anchor={'bottom'}
-                open={isContactDrawerOpen}
-                onClose={() => setIsContactDrawerOpen(false)}
+                open={contactDrawerInfo.isOpen}
+                onClose={closeContactDrawer}
             >
                 <Container maxWidth="xs">
                     <Box>
                         <Typography ml={2} mt={2} fontSize={24}>
-                            Ram Shayam
+                            {contactDrawerInfo.name}
                         </Typography>
 
                         <List >
-                            {[1, 2, 3].map((x) =>
+                            {contactDrawerInfo.phoneNumbers.map((phone, index) =>
                                 <ListItem
+                                    key={index}
                                     sx={{ pt: 1.5, pb: 1.5 }}
                                     secondaryAction={
                                         <>
-                                            <IconButton onClick={handleContactAction('ACTION_', '+9122222')} sx={{ color: 'blue' }} >
+                                            <IconButton component={Link} to={"tel:" + phone} sx={{ color: '#03a995' }} >
                                                 <Call />
                                             </IconButton>
-                                            <IconButton sx={{ color: 'green' }} >
-                                                <WhatsApp />
-                                            </IconButton>
-                                            <IconButton  component={Link} to="tel:5551234567"  sx={{ color: 'pink' }} >
+                                            <IconButton onClick={() => handleContactAction('ACTION_SMS', phone)} sx={{ color: '#1282a7' }} >
                                                 <Message />
+                                            </IconButton>
+                                            <IconButton onClick={() => handleContactAction('ACTION_WHATSAPP', phone)} sx={{ color: '#0d7b0d' }} >
+                                                <WhatsApp />
                                             </IconButton>
                                         </>
                                     }
                                 >
-                                    <ListItemText primary="+91987875745" />
+                                    <ListItemText primary={phone} />
                                 </ListItem>
                             )}
                         </List>

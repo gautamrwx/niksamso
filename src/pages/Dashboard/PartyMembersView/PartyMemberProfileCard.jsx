@@ -57,13 +57,18 @@ function PartyMemberProfileCard({
                 </Typography>
             </CardContent>
             <CardActions>
-                <Button onClick={() => { openContactDrawer('Abcd') }} fullWidth size="small">
+                <Button onClick={() => {
+                    openContactDrawer({
+                        name: memberProfileData.name ? memberProfileData.name : 'N/A',
+                        phoneNumbers: memberProfileData.mobileNumber
+                    })
+                }} fullWidth size="small">
                     <SmsOutlined />
                     <LocalPhoneOutlined />
                     <WhatsApp />
                 </Button>
             </CardActions>
-        </Card>
+        </Card >
     )
 }
 
