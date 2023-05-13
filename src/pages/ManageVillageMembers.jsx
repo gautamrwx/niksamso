@@ -53,11 +53,12 @@ function ManageVillageMembers(props) {
     }, [profile]);
 
     const getPreapredData = () => {
+        debugger
         const peopleInformation = {
             partyMembers: [
                 {
                     post: 'Village Party President ',
-                    name: 'Ram',
+                    name: 'Nick Fuery',
                     age: '33',
                     mobileNumber: [99,55,66,66],
                     youthGeneral: 'Youth'
@@ -71,14 +72,7 @@ function ManageVillageMembers(props) {
                 },
                 {
                     post: 'Village Party President ',
-                    name: 'Ram',
-                    age: '33',
-                    mobileNumber: [99,55,66,66],
-                    youthGeneral: 'Youth'
-                },
-                {
-                    post: 'Village Party President ',
-                    name: ' Mohan Kumar Chaudhry',
+                    name: 'Doremon',
                     age: '33',
                     mobileNumber: [99,55,66,66],
                     youthGeneral: 'Youth'
@@ -99,19 +93,13 @@ function ManageVillageMembers(props) {
                     youthGeneral: 'General'
                 },
                 {
-                    name: 'Mohan',
+                    name: 'Sigma User',
                     age: '33',
-                    mobileNumber: [22,55],
+                    mobileNumber: ['+918888888888','8888888888'],
                     youthGeneral: 'Youth'
                 },
                 {
-                    name: 'Mohan',
-                    age: '33',
-                    mobileNumber: [22,55],
-                    youthGeneral: 'General'
-                },
-                {
-                    name: 'Mohan',
+                    name: 'Abcd user',
                     age: '33',
                     mobileNumber: [22,55],
                     youthGeneral: 'General'
@@ -135,8 +123,10 @@ function ManageVillageMembers(props) {
     }
 
     const upload = (key) => {
+        debugger;
         const updates = {};
 
+       
         const newPartyPerson = push(child(ref(db), 'peopleInformation')).key;
         updates['/mapping_village_partyPeoples/' + key] = newPartyPerson;
         updates['/partyPeoples/' + newPartyPerson] = getPreapredData();
@@ -157,14 +147,14 @@ function ManageVillageMembers(props) {
 
             <Container>
                 {
-                    villageList.map((x) =>
+                    villageList.map((x,index) =>
                         <Box
-                            key={x.key}
+                            key={index}
                             mt={2}
                         >
 
                             <Typography >
-                                {x.val}
+                                {x.val} {x.key}
                             </Typography>
 
                             <Button
@@ -172,7 +162,7 @@ function ManageVillageMembers(props) {
                                 variant="contained"
                                 onClick={() => { upload(x.key) }}
                             >
-                                Asb
+                                Upload
                             </Button>
                         </Box>
                     )
