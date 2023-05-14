@@ -1,12 +1,12 @@
-import { Box, Button, Container, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, Container, Grid, IconButton, Typography } from '@mui/material';
 import SimpleAppBar from '../components/AppBarComponent/SimpleAppBar';
 import { useProfile } from '../context/profile.context';
 import { useEffect, useState } from 'react';
 import { child, get, push, ref, update } from 'firebase/database';
 import { db } from '../misc/firebase';
-
+import { Delete, Upload } from '@mui/icons-material';
+import csv from 'csvtojson';
 function ManageVillageMembers(props) {
-
     const { profile } = useProfile();
 
     const [villageList, setVillageList] = useState([]);
@@ -27,8 +27,14 @@ function ManageVillageMembers(props) {
                             const arrVillList = [];
                             Object.keys(villListObject).forEach(function (key) {
                                 arrVillList.push({
-                                    'key': key,
-                                    'val': villListObject[key]
+                                    villageGroupListKey,
+                                    'villageKey': key,
+                                    'villageName': villListObject[key].villageName,
+                                    'mappingSatus': villListObject[key].mappingSatus,
+                                    'progressStatus': {
+                                        deleteInProgress: false,
+                                        uploadInProgress: false
+                                    }
                                 });
                             });
 
@@ -38,7 +44,7 @@ function ManageVillageMembers(props) {
                                     a = a.toLowerCase();
                                     b = b.toLowerCase();
                                     return (a < b) ? -1 : (a > b) ? 1 : 0;
-                                })(a.val, b.val);
+                                })(a.villageName, b.villageName);
                             });
 
                             // Set Array data in DropDown Input
@@ -52,122 +58,142 @@ function ManageVillageMembers(props) {
         })();
     }, [profile]);
 
-    const getPreapredData = () => {
-        debugger
-        const peopleInformation = {
-            partyMembers: [
-                {
-                    post: 'Village Party President ',
-                    name: 'Nick Fuery',
-                    age: '33',
-                    mobileNumber: [99,55,66,66],
-                    youthGeneral: 'Youth'
-                },
-                {
-                    post: 'Village Party President ',
-                    name: 'Ram Shyam',
-                    age: '33',
-                    mobileNumber: [99,55,66,66],
-                    youthGeneral: 'General'
-                },
-                {
-                    post: 'Village Party President ',
-                    name: 'Doremon',
-                    age: '33',
-                    mobileNumber: [99,55,66,66],
-                    youthGeneral: 'Youth'
-                },
-                {
-                    post: 'Village Party President ',
-                    name: 'Ram',
-                    age: '33',
-                    mobileNumber: [99,55,66,66],
-                    youthGeneral: 'Youth'
-                }
-            ],
-            generalMembers: [
-                {
-                    name: 'Mohan',
-                    age: '33',
-                    mobileNumber: [22,55],
-                    youthGeneral: 'General'
-                },
-                {
-                    name: 'Sigma User',
-                    age: '33',
-                    mobileNumber: ['+918888888888','8888888888'],
-                    youthGeneral: 'Youth'
-                },
-                {
-                    name: 'Abcd user',
-                    age: '33',
-                    mobileNumber: [22,55],
-                    youthGeneral: 'General'
-                },
-                {
-                    name: 'Mohan',
-                    age: '33',
-                    mobileNumber: [22,55],
-                    youthGeneral: 'General'
-                },
-                {
-                    name: 'Mohan',
-                    age: '33',
-                    mobileNumber: [22,55],
-                    youthGeneral: 'General'
-                }
-            ]
-        }
 
-        return peopleInformation;
+    const verifyData = (jsonArr) => {
+        return true;
     }
 
-    const upload = (key) => {
-        debugger;
-        const updates = {};
+    const getPreapredData = (jsonArr) => {
+        const arrPartyMem = [];
+        const arrGenMem = [];
 
-       
-        const newPartyPerson = push(child(ref(db), 'peopleInformation')).key;
-        updates['/mapping_village_partyPeoples/' + key] = newPartyPerson;
-        updates['/partyPeoples/' + newPartyPerson] = getPreapredData();
+        jsonArr = jsonArr.slice(1); // Delete First Index
+
+        const partyMembersJsonArr = jsonArr.filter(x => x[1] != 'Members');
+        const generalMembersJsonArr = jsonArr.filter(x => x[1] === 'Members');
+
+        partyMembersJsonArr.forEach(x => {
+            arrPartyMem.push({
+                post: x[1],
+                name: x[2],
+                age: x[3],
+                mobileNumber: [x[4], x[5], x[6], x[7], x[8]],
+                youthGeneral: x[9]
+            })
+        });
+
+        generalMembersJsonArr.forEach(x => {
+            arrGenMem.push({
+                name: x[2],
+                age: x[3],
+                mobileNumber: [x[4], x[5], x[6], x[7], x[8]],
+                youthGeneral: x[9]
+            })
+        })
+
+        return {
+            partyMembers: arrPartyMem,
+            generalMembers: arrGenMem
+        }
+    }
+
+    const uploadData = (jsonArr, { villageGroupListKey, villageKey }) => {
+        const isDataVerified = verifyData(jsonArr);
+        if (!isDataVerified) return;
+
+        const peopleInformation = getPreapredData(jsonArr);
+
+        const updates = {};
+        const newPartyPersonKey = push(child(ref(db), 'partyPeoples')).key;
+        updates['/mapping_village_partyPeoples/' + villageKey] = newPartyPersonKey;
+        updates['/partyPeoples/' + newPartyPersonKey] = peopleInformation;
+        updates['/villageGroupList/' + villageGroupListKey + '/' + villageKey + '/mappingSatus'] = true;
 
         // <==== | Update All Data In Single Shot | ====>
         update(ref(db), updates).then(x => {
-            // Do Nothing
         }).catch((error) => {
             alert("Error  Update");
         });
-
-        // assign relational data
     }
+
+    const readFile = ({ target }, x) => {
+        const fr = new FileReader();
+
+        fr.onload = function () {
+            csv({
+                noheader: true,
+                output: "csv",
+            })
+                .fromString(fr.result)
+                .then((csvRow) => {
+                    uploadData(csvRow, x);
+                });
+        };
+
+        fr.readAsText(target.files[0]);
+    };
 
     return (
         <>
             <SimpleAppBar props={props} />
 
-            <Container>
-                {
-                    villageList.map((x,index) =>
-                        <Box
-                            key={index}
-                            mt={2}
-                        >
+            <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}>
+                {Array.from(villageList).map((villageData, index) => (
+                    <Grid item xs={1} sm={1} md={1} lg={1} key={index}>
+                        <Card sx={{ minHeight: 120 }}>
+                            <CardContent >
+                                <Box display={"flex"}>
+                                    <Typography >
+                                        {villageData.villageName}
+                                    </Typography>
+                                </Box>
+                            </CardContent>
+                            <CardActions>
+                                <Box display="flex" flex='1' >
+                                    <Box
+                                        display="flex"
+                                        flexDirection={'column'}
+                                        flex='1'
+                                    >
+                                        <Button
+                                            disabled={villageData.mappingSatus}
+                                            variant="outlined"
+                                            component="label"
+                                        >
+                                            Upload <Upload />
+                                            <input
+                                                onChange={(event) => readFile(event, villageData)}
+                                                type="file"
+                                                hidden
+                                            />
+                                        </Button>
+                                    </Box>
+                                    <Box
+                                        display="flex"
+                                        flexDirection={'column'}
+                                        justifyContent='center'
+                                        pl={2}
+                                        pr={2}
+                                    >
+                                        <IconButton
+                                            disabled={!villageData.mappingSatus}
+                                            color='error'
+                                            type="button"
+                                            variant="contained"
+                                            onClick={() => { }}
+                                        >
+                                            <Delete />
+                                        </IconButton>
 
-                            <Typography >
-                                {x.val} {x.key}
-                            </Typography>
-
-                            <Button
-                                type="button"
-                                variant="contained"
-                                onClick={() => { upload(x.key) }}
-                            >
-                                Upload
-                            </Button>
-                        </Box>
-                    )
+                                        
+                                    </Box>
+                                </Box>
+                            </CardActions>
+                        </Card >
+                    </Grid>
+                ))
                 }
-            </Container >
+            </Grid >
         </>
     );
 }

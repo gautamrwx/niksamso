@@ -98,7 +98,7 @@ function Dashboard(props) {
                         Object.keys(villListObject).forEach(function (key) {
                             arrVillList.push({
                                 'key': key,
-                                'val': villListObject[key]
+                                'val': villListObject[key].villageName
                             });
                         });
 

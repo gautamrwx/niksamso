@@ -12,7 +12,7 @@ import { emailValidator, passwordValidator } from '../misc/emailPasswordValidato
 
 function AccountSetup() {
   const [userFormData, setUserFormData] = useState({
-    email: "alex@test.in",
+    email: "nick@test.in",
     password: "Windows11",
     confirmPassword: "Windows11",
   });
@@ -126,7 +126,10 @@ function AccountSetup() {
 
     assignedVillages.forEach(villageName => {
       const newVillageKey = push(child(ref(db), 'villageGroupList/' + newVillageGroupKey)).key;
-      updates['/villageGroupList/' + newVillageGroupKey + '/' + newVillageKey] = villageName;
+      updates['/villageGroupList/' + newVillageGroupKey + '/' + newVillageKey] = {
+        villageName,
+        mappingSatus: false
+      };
     });
 
     // 3. Map User With villageGroupList
