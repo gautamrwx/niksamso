@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, Container, Grid, IconButton, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CircularProgress, Container, Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 import SimpleAppBar from '../components/AppBarComponent/SimpleAppBar';
 import { useProfile } from '../context/profile.context';
 import { useEffect, useState } from 'react';
@@ -6,21 +6,58 @@ import { child, get, push, ref, update } from 'firebase/database';
 import { db } from '../misc/firebase';
 import { Delete, Upload } from '@mui/icons-material';
 import csv from 'csvtojson';
+import { red } from '@mui/material/colors';
 function ManageVillageMembers(props) {
     const { profile } = useProfile();
 
     const [villageList, setVillageList] = useState([]);
+    const [isDataLoading, setIsDataLoading] = useState(false);
 
+
+    const toggleProgressIndicator = (index, progressType, condition) => {
+        setVillageList((prevArray) => {
+            switch (progressType) {
+                case 'UPLOAD':
+                    prevArray[index].progressStatus.uploadInProgress = condition;
+                    break;
+                case 'DELETE':
+                    prevArray[index].progressStatus.deleteInProgress = condition;
+                    break;
+                default:
+                    break;
+            }
+            return [...prevArray]
+        });
+    }
+
+    const resetMemberMappingStatus = (index, condition) => {
+        setVillageList((prevArray) => {
+            prevArray[index].mappingSatus = condition;
+            return [...prevArray];
+        });
+    }
+
+    const setErrorMessage = (index, errorMessage = null) => {
+        setVillageList((prevArray) => {
+            prevArray[index].errorMessage = errorMessage;
+            return [...prevArray];
+        });
+    }
+
+    // ---- Start | Firebase Business Logic ---- //
     // Get Village List
     useEffect(() => {
-        // Step 1. Fetch User-Vllage Key Mapping
+        setIsDataLoading(true);
+        // Step 1. Fetch User-VillGroupKey Mapping
         (function () {
             get(child(ref(db), 'mapping_users_villageGroupList/' + profile.uid)).then((snapshot) => {
                 const villageGroupListKey = snapshot.val();
 
-                // Step 2. Fetch User-Vllage Key Mapping
+                // Step 2. Fetch Vllage-PartyPeoples Key Mapping
                 if (villageGroupListKey) {
                     get(child(ref(db), "villageGroupList/" + villageGroupListKey)).then((snapshot) => {
+                        setIsDataLoading(false);
+
                         const villListObject = snapshot.val();
                         if (villListObject) {
                             // Convert JsonList Into Array
@@ -31,6 +68,7 @@ function ManageVillageMembers(props) {
                                     'villageKey': key,
                                     'villageName': villListObject[key].villageName,
                                     'mappingSatus': villListObject[key].mappingSatus,
+                                    'errorMessage': null,
                                     'progressStatus': {
                                         deleteInProgress: false,
                                         uploadInProgress: false
@@ -52,15 +90,81 @@ function ManageVillageMembers(props) {
                         }
                     });
                 }
-            }).catch((error) => {
-                console.log(error);
-            });
+            }).catch((error) => { setIsDataLoading(false) });
         })();
     }, [profile]);
 
 
-    const verifyData = (jsonArr) => {
-        return true;
+    const uploadData = (jsonArr, { villageGroupListKey, villageKey }, selectedIndex) => {
+        const peopleInformation = getPreapredData(jsonArr);
+
+        const updates = {};
+        const newPartyPersonKey = push(child(ref(db), 'partyPeoples')).key;
+        updates['/mapping_village_partyPeoples/' + villageKey] = newPartyPersonKey;
+        updates['/partyPeoples/' + newPartyPersonKey] = peopleInformation;
+        updates['/villageGroupList/' + villageGroupListKey + '/' + villageKey + '/mappingSatus'] = true;
+
+        // <==== | Update All Data In Single Shot | ====>
+        update(ref(db), updates).then(x => {
+            toggleProgressIndicator(selectedIndex, 'UPLOAD', false);
+            resetMemberMappingStatus(selectedIndex, true);
+        }).catch((error) => {
+            toggleProgressIndicator(selectedIndex, 'UPLOAD', false);
+            alert("Error  Update");
+        });
+    }
+
+    const handleDeleteVillageMembers = ({ villageGroupListKey, villageKey }, selectedIndex) => {
+        toggleProgressIndicator(selectedIndex, 'DELETE', true);
+
+        // Get Key Of PartyPeople For Current Village
+        get(child(ref(db), 'mapping_village_partyPeoples/' + villageKey)).then((snapshot) => {
+            const partyPeopleKey = snapshot.val();
+
+            const updates = {};
+            if (partyPeopleKey) {
+                // [1] Delete Uploaded Party Peoples
+                updates['/partyPeoples/' + partyPeopleKey] = null;
+            }
+
+            // [2] Delete Village->PartyPeople Mapping
+            updates['/mapping_village_partyPeoples/' + villageKey] = null;
+            updates['/villageGroupList/' + villageGroupListKey + '/' + villageKey + '/mappingSatus'] = false;
+
+            // <==== | Update All Data In Single Shot | ====>
+            update(ref(db), updates).then(x => {
+                toggleProgressIndicator(selectedIndex, 'DELETE', false);
+                resetMemberMappingStatus(selectedIndex, false);
+            }).catch((error) => {
+                toggleProgressIndicator(selectedIndex, 'DELETE', false);
+                alert("Error  Delete");
+            });
+        }).catch((error) => { });
+    }
+    // ---- End | Firebase Business Logic ---- //
+
+    // ---- Start | Helper Functions ---- //
+    const verifyData = (jsonArr, villageName) => {
+        const verificationStatus = {
+            isValidData: true,
+            message: null
+        }
+
+        if (jsonArr.length <= 1) {
+            // Check Number of Rows
+            verificationStatus.isValidData = false;
+            verificationStatus.message = 'Uploaded CSV Does not Have Data';
+        } else if (jsonArr[0].length !== 10) {
+            // Check Number of Columns
+            verificationStatus.isValidData = false;
+            verificationStatus.message = 'Uploaded CSV File Must Have 10 Column';
+        } else if (String(jsonArr[1][0]).toUpperCase() !== String(villageName).toUpperCase()) {
+            // Match Village Name with CSV Village Name
+            verificationStatus.isValidData = false;
+            verificationStatus.message = 'Village Name Not Matching For Uploaed CSV ';
+        }
+
+        return verificationStatus;
     }
 
     const getPreapredData = (jsonArr) => {
@@ -97,26 +201,9 @@ function ManageVillageMembers(props) {
         }
     }
 
-    const uploadData = (jsonArr, { villageGroupListKey, villageKey }) => {
-        const isDataVerified = verifyData(jsonArr);
-        if (!isDataVerified) return;
+    const handleVillageMembersCSVUpload = ({ target }, villageData, selectedIndex) => {
+        toggleProgressIndicator(selectedIndex, 'UPLOAD', true);
 
-        const peopleInformation = getPreapredData(jsonArr);
-
-        const updates = {};
-        const newPartyPersonKey = push(child(ref(db), 'partyPeoples')).key;
-        updates['/mapping_village_partyPeoples/' + villageKey] = newPartyPersonKey;
-        updates['/partyPeoples/' + newPartyPersonKey] = peopleInformation;
-        updates['/villageGroupList/' + villageGroupListKey + '/' + villageKey + '/mappingSatus'] = true;
-
-        // <==== | Update All Data In Single Shot | ====>
-        update(ref(db), updates).then(x => {
-        }).catch((error) => {
-            alert("Error  Update");
-        });
-    }
-
-    const readFile = ({ target }, x) => {
         const fr = new FileReader();
 
         fr.onload = function () {
@@ -126,16 +213,45 @@ function ManageVillageMembers(props) {
             })
                 .fromString(fr.result)
                 .then((csvRow) => {
-                    uploadData(csvRow, x);
+                    const { isValidData, message } = verifyData(csvRow, villageData.villageName);
+                    if (!isValidData) {
+                        setErrorMessage(selectedIndex, message);
+                        toggleProgressIndicator(selectedIndex, 'UPLOAD', false);
+                        return;
+                    }
+
+                    uploadData(csvRow, villageData, selectedIndex);
                 });
         };
 
         fr.readAsText(target.files[0]);
     };
+    // ---- End | Helper Functions ---- //
 
     return (
         <>
             <SimpleAppBar props={props} />
+
+            {isDataLoading && <Box
+                display="grid"
+                justifyContent="center"
+                alignItems="center"
+                minWidth="100%"
+                minHeight="60vh"
+            >
+                <Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                        <CircularProgress />
+                    </Box>
+                    <Typography
+                        fontWeight='bold'
+                        fontFamily={"sans-serif"}
+                        color='#686868'
+                    >
+                        Loading
+                    </Typography>
+                </Box>
+            </Box>}
 
             <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 2, sm: 3, md: 4, lg: 5 }}>
                 {Array.from(villageList).map((villageData, index) => (
@@ -143,8 +259,13 @@ function ManageVillageMembers(props) {
                         <Card sx={{ minHeight: 120 }}>
                             <CardContent >
                                 <Box display={"flex"}>
-                                    <Typography >
+                                    <Typography color={'#415468'} fontWeight='bold'>
                                         {villageData.villageName}
+                                    </Typography>
+                                </Box>
+                                <Box height='2rem'>
+                                    <Typography sx={{ color: '#d81f10', fontSize: 13 }}>
+                                        {villageData.errorMessage}
                                     </Typography>
                                 </Box>
                             </CardContent>
@@ -154,19 +275,24 @@ function ManageVillageMembers(props) {
                                         display="flex"
                                         flexDirection={'column'}
                                         flex='1'
+                                        justifyContent={'center'}
                                     >
-                                        <Button
-                                            disabled={villageData.mappingSatus}
-                                            variant="outlined"
-                                            component="label"
-                                        >
-                                            Upload <Upload />
-                                            <input
-                                                onChange={(event) => readFile(event, villageData)}
-                                                type="file"
-                                                hidden
-                                            />
-                                        </Button>
+                                        {
+                                            villageData.progressStatus.uploadInProgress
+                                                ? <LinearProgress />
+                                                : <Button
+                                                    disabled={villageData.mappingSatus}
+                                                    variant="outlined"
+                                                    component="label"
+                                                >
+                                                    <Typography display={{ xs: 'none', sm: 'block' }}>Upload</Typography> <Upload />
+                                                    <input
+                                                        onChange={(event) => handleVillageMembersCSVUpload(event, villageData, index)}
+                                                        type="file"
+                                                        hidden
+                                                    />
+                                                </Button>
+                                        }
                                     </Box>
                                     <Box
                                         display="flex"
@@ -175,17 +301,19 @@ function ManageVillageMembers(props) {
                                         pl={2}
                                         pr={2}
                                     >
-                                        <IconButton
-                                            disabled={!villageData.mappingSatus}
-                                            color='error'
-                                            type="button"
-                                            variant="contained"
-                                            onClick={() => { }}
-                                        >
-                                            <Delete />
-                                        </IconButton>
-
-                                        
+                                        {
+                                            villageData.progressStatus.deleteInProgress
+                                                ? <CircularProgress color="error" />
+                                                : <IconButton
+                                                    disabled={!villageData.mappingSatus}
+                                                    color='error'
+                                                    type="button"
+                                                    variant="contained"
+                                                    onClick={() => handleDeleteVillageMembers(villageData, index)}
+                                                >
+                                                    <Delete />
+                                                </IconButton>
+                                        }
                                     </Box>
                                 </Box>
                             </CardActions>
