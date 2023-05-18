@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../misc/firebase';
+import { auth, db } from '../misc/firebase';
+import { child, get, ref } from 'firebase/database';
 
 const profileContext = createContext();
 
@@ -11,25 +12,49 @@ export const ProfileProvider = ({ children }) => {
         const authUnsub = auth.onAuthStateChanged(authObj => {
             if (authObj) {
 
-                const data = {
-                    uid: authObj.uid,
-                    email: authObj.email,
-                };
+                let userProfileData;
 
-                setProfile(data);
-                setisLoading(false);
+                // Fetch Name And Profile Pic From DataBase
+                get(child(ref(db), "users/" + authObj.uid)).then((snapshot) => {
+                    const user = snapshot.val();
 
+                    if (user) {
+                        userProfileData = {
+                            ...user,
+                            uid: authObj.uid,
+                            email: authObj.email,
+                        }
+
+                        setProfile(userProfileData);
+                        setisLoading(false);
+                    }
+                    else {
+                        throw (null);
+                    }
+                }).catch(() => {
+                    userProfileData = {
+                        fullName: "",
+                        profilePic: "",
+                        uid: authObj.uid,
+                        email: authObj.email,
+                    }
+
+                    setProfile(userProfileData);
+                    setisLoading(false);
+                });
             } else {
                 setProfile(null);
                 setisLoading(false);
             }
         });
 
-        return () => { authUnsub() };
+        return () => {
+            authUnsub();
+        };
     }, []);
 
     return (
-        <profileContext.Provider value={{ profile, isLoading }}>
+        <profileContext.Provider value={{ profile, isLoading, setProfile }}>
             {children}
         </profileContext.Provider>
     );

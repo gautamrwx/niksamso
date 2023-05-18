@@ -117,7 +117,8 @@ function AccountSetup() {
 
     // 1. Assign User Profile Information
     const profileInfo = {
-      profilePic: ""
+      fullName: "Unknown",
+      profilePic: "",
     };
     updates['/users/' + user.uid] = profileInfo
 

@@ -8,7 +8,7 @@ const settings = ['My Account', 'Logout'];
 
 function UserProfileActionAvatar() {
     const { profile } = useProfile();
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
 
     const [anchorElUser, setAnchorElUser] = useState(null);
 
@@ -37,7 +37,10 @@ function UserProfileActionAvatar() {
         <Box sx={{ flexGrow: 0, marginLeft: 2 }}>
             <Tooltip title="Profile">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt={String(profile.email).toUpperCase()} src="/static/images/avatar/2.jpg" />
+                    <Avatar
+                        alt={String(profile.email).toUpperCase()}
+                        src={profile.profilePic ? profile.profilePic : 'null'}
+                    />
                 </IconButton>
             </Tooltip>
             <Menu
@@ -56,7 +59,8 @@ function UserProfileActionAvatar() {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
             >
-                <Typography mt={1} mb={1} textAlign="center">{profile.email}</Typography>
+                <Typography mt={1} mb={1} textAlign="center">{profile.fullName} </Typography>
+                <Typography mt={1} mb={1} fontSize={14} textAlign="center"> {profile.email} </Typography>
                 <Divider />
                 {settings.map((setting) => (
                     <MenuItem key={setting} onClick={() => { handleCloseUserMenu(setting) }}>
