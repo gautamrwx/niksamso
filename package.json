@@ -24,7 +24,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cordova": "react-scripts build && rm -rf ../Niksamso-Cordova/www && mv ./build ../Niksamso-Cordova/www && cd ../Niksamso-Cordova/www && cordova run android"
   },
   "eslintConfig": {
     "extends": [

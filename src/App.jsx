@@ -13,6 +13,7 @@ import { useEffect } from 'react';
 
 function App() {
 
+  // ===[ Cordova Operations ]== 
   useEffect(() => {
     // Logic to prevent Back Button Press On Cordova
     document.addEventListener("backbutton", (event) => {
@@ -25,6 +26,17 @@ function App() {
       else {
         window.history.go(-1);
       }
+    }, false);
+
+    // 1. Hide App Splash Screen
+    // 2. Set Statusbar Background Color
+    document.addEventListener("deviceready", (event) => {
+      navigator.splashscreen.hide();
+
+      setTimeout(() => {
+        window.StatusBar.backgroundColorByHexString('#1976D2');
+      }, 1500);
+
     }, false);
   }, []);
 
