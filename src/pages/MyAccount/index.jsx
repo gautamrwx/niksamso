@@ -70,7 +70,11 @@ function MyAccount(props) {
                     alignItems: 'center',
                 }}
             >
-                <Avatar sx={{ height: '6rem', width: '6rem' }} alt={'A'} src="/static/images/avatar/2.jpg" />
+                <Avatar
+                    sx={{ height: '6rem', width: '6rem' }}
+                    alt={String(profile.email).toUpperCase()}
+                    src={profile.profilePic ? profile.profilePic : 'null'}
+                />
             </Box>
 
             <Container component="main" maxWidth="xs">
