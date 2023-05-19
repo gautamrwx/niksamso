@@ -3,15 +3,12 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useState } from 'react';
 import { passwordValidator } from '../../misc/emailPasswordValidator';
 import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth'
-import { useProfile } from '../../context/profile.context';
 import { auth } from '../../misc/firebase';
 
 function PasswordChange({
     onShowSnackbarMessage,
     setIsPasswordPopupOpen
 }) {
-    const { profile } = useProfile();
-
     const [inputPassword, setInputPassword] = useState({
         oldPassword: 'Windows11',
         newPassword: '12345678',

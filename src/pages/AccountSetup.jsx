@@ -5,7 +5,7 @@ import { Alert, Box, Button, CircularProgress, Container, FormControl, IconButto
 import { db, auth } from '../misc/firebase';
 import md5 from 'md5';
 import logo from '../images/logo.png'
-import { Lock, PersonAddAlt, Visibility, VisibilityOff } from '@mui/icons-material';
+import { PersonAddAlt, Visibility, VisibilityOff } from '@mui/icons-material';
 import { emailValidator, passwordValidator } from '../misc/emailPasswordValidator';
 
 

@@ -50,7 +50,7 @@ function MyAccount(props) {
         // <==== | Update All Data In Single Shot | ====>
         update(ref(db), updates).then(x => {
 
-            setProfile(prev => ({ ...prev, ['fullName']: myProfileInfo.fullName }));
+            setProfile(prev => ({ ...prev, fullName: myProfileInfo.fullName }));
 
             setIsProfileUpdateProgress(false);
             onShowSnackbarMessage('success', 'Successful');

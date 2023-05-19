@@ -29,9 +29,9 @@ export const ProfileProvider = ({ children }) => {
                         setisLoading(false);
                     }
                     else {
-                        throw (null);
+                        throw Object.assign(new Error('Undef'), { code: 0 });
                     }
-                }).catch(() => {
+                }).catch((e) => {
                     userProfileData = {
                         fullName: "",
                         profilePic: "",

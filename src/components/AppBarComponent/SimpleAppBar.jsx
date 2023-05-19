@@ -1,4 +1,4 @@
-import { AppBar, Box, Divider, IconButton, Toolbar, Typography } from '@mui/material';
+import { AppBar, Box, IconButton, Toolbar } from '@mui/material';
 import DehazeIcon from '@mui/icons-material/Dehaze';
 import { useEffect, useState } from 'react';
 import NavigationDrawer from './innterComponents/NavigationDrawer';
@@ -25,7 +25,7 @@ function SimpleAppBar({ props }) {
         
         const pageName = linkAndPagesWithActiveStatus.find(x => x.isLinkActive);
         setCurrentPageName(pageName.linkPageName);
-    }, [])
+    }, [location])
 
     return (
         <>

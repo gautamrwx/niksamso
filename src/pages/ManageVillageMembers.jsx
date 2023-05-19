@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardActions, CardContent, CircularProgress, Container, Grid, IconButton, LinearProgress, Typography } from '@mui/material';
+import { Box, Button, Card, CardActions, CardContent, CircularProgress, Grid, IconButton, LinearProgress, Typography } from '@mui/material';
 import SimpleAppBar from '../components/AppBarComponent/SimpleAppBar';
 import { useProfile } from '../context/profile.context';
 import { useEffect, useState } from 'react';
@@ -6,7 +6,6 @@ import { child, get, push, ref, update } from 'firebase/database';
 import { db } from '../misc/firebase';
 import { Delete, Upload } from '@mui/icons-material';
 import csv from 'csvtojson';
-import { red } from '@mui/material/colors';
 function ManageVillageMembers(props) {
     const { profile } = useProfile();
 
@@ -173,7 +172,7 @@ function ManageVillageMembers(props) {
 
         jsonArr = jsonArr.slice(1); // Delete First Index
 
-        const partyMembersJsonArr = jsonArr.filter(x => x[1] != 'Members');
+        const partyMembersJsonArr = jsonArr.filter(x => x[1] !== 'Members');
         const generalMembersJsonArr = jsonArr.filter(x => x[1] === 'Members');
 
         partyMembersJsonArr.forEach(x => {
