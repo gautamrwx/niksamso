@@ -9,8 +9,25 @@ import PrivateRoute from './components/PrivateRoute';
 import PublicRoute from './components/PublicRoute';
 import { ProfileProvider } from './context/profile.context';
 import './styles/style.css'
+import { useEffect } from 'react';
 
 function App() {
+
+  useEffect(() => {
+    // Logic to prevent Back Button Press On Cordova
+    document.addEventListener("backbutton", (event) => {
+      const urlLocationHash = window.location.hash;
+      if (urlLocationHash === '#/' || urlLocationHash === '#/SignIn' || urlLocationHash === '') {
+        event.preventDefault();
+        try { navigator.app.exitApp(); }
+        catch (e) { /* Nothing to do*/ }
+      }
+      else {
+        window.history.go(-1);
+      }
+    }, false);
+  }, []);
+
   return (
     <ProfileProvider>
       <Routes >
