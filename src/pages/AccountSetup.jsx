@@ -12,9 +12,9 @@ import { emailValidator, passwordValidator } from '../misc/emailPasswordValidato
 
 function AccountSetup() {
   const [userFormData, setUserFormData] = useState({
-    email: "nick@test.in",
-    password: "Windows11",
-    confirmPassword: "Windows11",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
   const [userInputValidation, setuserInputValidation] = useState({
     isCorrectEmail: true,

@@ -10,9 +10,9 @@ function PasswordChange({
     setIsPasswordPopupOpen
 }) {
     const [inputPassword, setInputPassword] = useState({
-        oldPassword: 'Windows11',
-        newPassword: '12345678',
-        confirmPassword: '12345678'
+        oldPassword: '',
+        newPassword: '',
+        confirmPassword: ''
     });
     const [inputPasswordValidation, setInputPasswordValidation] = useState({
         isValidOldPassword: true,

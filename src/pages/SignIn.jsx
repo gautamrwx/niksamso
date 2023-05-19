@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom';
 
 function SignIn() {
   const [userFormData, setUserFormData] = useState({
-    email: "thor@test.in",
-    password: "Windows11",
+    email: "",
+    password: "",
   });
   const [userInputValidation, setuserInputValidation] = useState({
     isCorrectEmail: true,
