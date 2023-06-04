@@ -12,17 +12,15 @@ export const ProfileProvider = ({ children }) => {
     useEffect(() => {
         const authUnsub = auth.onAuthStateChanged(authObj => {
             if (authObj) {
-
-                let userProfileData;
-
                 // Fetch Name And Profile Pic From DataBase
                 get(child(ref(db), "users/" + authObj.uid)).then((snapshot) => {
                     const user = snapshot.val();
 
                     if (user) {
-                        userProfileData = {
+                        const userProfileData = {
                             fullName: user.fullName,
-                            profilePic: user.profilePic,
+                            profilePicThumbnail: user.profilePicThumbnail,
+                            profilePicFull: user.profilePicFull,
                             uid: authObj.uid,
                             email: authObj.email,
                             mappedVillGroupKey: user.mappedVillGroupKey

@@ -1,5 +1,5 @@
 import { Box, Button, Container, Drawer, LinearProgress, Typography } from "@mui/material";
-import userLogo from '../../../images/userLogo.png';
+import userLogo from '../images/userLogo.png';
 import { Upload } from "@mui/icons-material";
 import { getDownloadURL, getStorage, ref as storageRef, uploadString } from "firebase/storage";
 import resizeImage from 'resize-image'
@@ -109,7 +109,7 @@ export default function ProfilePicViewDrawer({
                         />
                         {isLoadingPic && <LinearProgress />}
                         <Typography textAlign={'center'}>
-                            {profilePicDrawerData.name}
+                            {profilePicDrawerData.fullName}
                         </Typography>
 
                         <Box mt={2} mb={2} display={'flex'} justifyContent={'center'}>

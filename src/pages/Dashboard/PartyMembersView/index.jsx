@@ -1,6 +1,6 @@
 import { Grid } from "@mui/material";
 import PartyMemberProfileCard from "./PartyMemberProfileCard";
-import ProfilePicViewDrawer from "./ProfilePicViewDrawer";
+import ProfilePicViewDrawer from "../../../components/ProfilePicViewDrawer";
 import { useState } from "react";
 import { ref, update } from 'firebase/database';
 import { db } from "../../../misc/firebase";
