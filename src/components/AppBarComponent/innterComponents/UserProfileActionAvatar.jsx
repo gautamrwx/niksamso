@@ -38,7 +38,7 @@ function UserProfileActionAvatar() {
             <Tooltip title="Profile">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                     <Avatar
-                        alt={String(profile.email).toUpperCase()}
+                        alt={String(profile.fullName).toUpperCase()}
                         src={profile.profilePic ? profile.profilePic : 'null'}
                     />
                 </IconButton>

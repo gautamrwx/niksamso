@@ -1,10 +1,10 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 
 function BlankTextProcessingDisplay({
-    selectedVillageKey,
+    isVillageSelected,
     isLoadingPartyPeoples
 }) {
-    const Customizetext = ({ children, ...other }) => {
+    const Customizetext = ({ children }) => {
         return (
             <Typography
                 fontWeight='bold'
@@ -25,7 +25,7 @@ function BlankTextProcessingDisplay({
             minHeight="60vh"
         >
             {
-                String(selectedVillageKey).length <= 0
+                !isVillageSelected
                     ? <Customizetext>Please Select Village From DropDown</Customizetext>
                     : (isLoadingPartyPeoples
                         ? <Box>

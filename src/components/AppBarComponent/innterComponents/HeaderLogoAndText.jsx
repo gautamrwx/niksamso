@@ -1,33 +1,37 @@
 import { Box, Typography } from '@mui/material';
 import logo from '../../../images/logo-no-text.png'
 
-const HeaderLogoAndText = ({ currentPageName, isDashBoardAppBar }) => {
+const HeaderLogoAndText = ({
+    currentPageName,
+    isRightSideComponentOccupied
+}) => {
     return (
         <>
             <Box
                 width={30}
                 component="img"
-                src={logo} />
+                src={logo}
+            />
 
-            <Typography
-                display={{ xs: 'none', md: 'block' }}
-                fontSize={25}
-                ml={2}>
-                Nikasamso
-            </Typography>
-
-            {isDashBoardAppBar
-                ? <Typography
-                    display={{ xs: 'none', sm: 'block' }}
-                    ml={1}
-                    fontSize={15}>
-                    / {currentPageName}
+            <Box display={{ xs: 'none', md: 'flex' }} ml={2} flexDirection={'column'} alignItems='center'>
+                <Typography fontSize={22} lineHeight='1'>
+                    Nikasamso
                 </Typography>
-                : <Typography
-                    ml={1}
+            </Box>
+
+            <Box ml={1.5} alignItems={'center'} display={{ xs: isRightSideComponentOccupied ? 'none' : 'inline-flex', sm: 'inline-flex' }}>
+                <Typography fontSize={25}>|</Typography>
+                <Typography
+                    color='#e0e9ea'
+                    ml={1.5}
+                    mt={0.4}
                     fontSize={15}>
-                    / {currentPageName}
-                </Typography>}
+                    {currentPageName}
+                </Typography>
+
+            </Box>
+
+
         </>
     )
 }

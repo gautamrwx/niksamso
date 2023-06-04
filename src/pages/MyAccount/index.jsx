@@ -1,10 +1,10 @@
-import SimpleAppBar from '../../components/AppBarComponent/SimpleAppBar';
 import { Alert, Avatar, Box, Button, CircularProgress, Container, FormControl, InputLabel, Modal, OutlinedInput, Paper, Snackbar, TextField, Toolbar } from '@mui/material';
 import { useState } from 'react';
 import { useProfile } from '../../context/profile.context';
 import PasswordChange from './PasswordChange';
 import { ref, update } from 'firebase/database';
 import { db } from '../../misc/firebase';
+import CustomAppBar from '../../components/AppBarComponent/CustomAppBar';
 
 function MyAccount(props) {
     const { profile, setProfile } = useProfile();
@@ -45,7 +45,7 @@ function MyAccount(props) {
         const updates = {}
 
         // 1. Assign User Profile Information
-        updates['/users/' + profile.uid + '/fullName'] = myProfileInfo.fullName;
+        updates['/admins/' + profile.uid + '/fullName'] = myProfileInfo.fullName;
 
         // <==== | Update All Data In Single Shot | ====>
         update(ref(db), updates).then(x => {
@@ -61,7 +61,8 @@ function MyAccount(props) {
 
     return (
         <>
-            <SimpleAppBar props={props} />
+            <CustomAppBar props={props} />
+
             <Box
                 sx={{
                     marginTop: 5,
@@ -72,7 +73,7 @@ function MyAccount(props) {
             >
                 <Avatar
                     sx={{ height: '6rem', width: '6rem' }}
-                    alt={String(profile.email).toUpperCase()}
+                    alt={String(profile.fullName).toUpperCase()}
                     src={profile.profilePic ? profile.profilePic : 'null'}
                 />
             </Box>

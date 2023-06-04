@@ -5,7 +5,6 @@ import { Alert, Box, Button, CircularProgress, Container, FormControl, IconButto
 import logo from '../images/logo.png'
 import { Lock, Visibility, VisibilityOff } from '@mui/icons-material';
 import { emailValidator, passwordValidator } from '../misc/emailPasswordValidator';
-import { Link } from 'react-router-dom';
 
 function SignIn() {
   const [userFormData, setUserFormData] = useState({
@@ -30,10 +29,6 @@ function SignIn() {
   const onShowSnackbarMessage = (message) => {
     setIsSnackbarOpen(true);
     setAlertMessage(message);
-  }
-
-  const onHideSnackbarMessage = () => {
-    setIsSnackbarOpen(false);
   }
 
   const onUserSignIn = (event) => {
@@ -65,6 +60,7 @@ function SignIn() {
     setIsLoginInProgress(true);
     signInWithEmailAndPassword(auth, userFormData.email, userFormData.password)
       .then((userCredential) => {
+        setIsLoginInProgress(false);
         // Do Nothing - Page will be Auto Redirected To DashBoard
       })
       .catch((error) => {
@@ -165,29 +161,18 @@ function SignIn() {
           </Button>
         </Box>
 
-        <Button
-          component={Link}
-          to="/AccountSetup"
-          type="button"
-          variant="outlined"
-          fullWidth
-          sx={{ mt: 3 }}
-        >
-          Account Setup
-        </Button>
-
         <Snackbar
           anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'center'
           }}
           open={isSnackbarOpen}
-          onClose={onHideSnackbarMessage}
+          onClose={() => setIsSnackbarOpen(false)}
         >
           <Alert severity="error">{alertMessage}</Alert>
         </Snackbar>
       </Box>
-    </Container>
+    </Container >
   );
 }
 

@@ -6,8 +6,19 @@ import UserProfileActionAvatar from './innterComponents/UserProfileActionAvatar'
 import { useLocation } from 'react-router-dom';
 import linkPageMappingHelper from '../../misc/linkPageMappingHelper';
 import HeaderLogoAndText from './innterComponents/HeaderLogoAndText';
+import PartyPeoplesSelectionTabBar from './innerTabBarComponent/PartyPeoplesSelectionTabBar';
+import VillageSelector from './innerSelectionComponent/VillageSelector';
 
-function SimpleAppBar({ props }) {
+export default function CustomAppBar({
+    props,
+    rightSideComponent,
+    handleVillageSelectionChange,
+    setIsVillageSelected,
+    tabSelectionBarVisible,
+    selectedTabBarIndex,
+    setSelectedTabBarIndex
+}) {
+
     // Container Will Use in App Drawer
     const { window } = props;
     const container = window !== undefined ? () => window().document.body : undefined;
@@ -15,17 +26,17 @@ function SimpleAppBar({ props }) {
     const [isDrowerOpen, setIsDrawerOpen] = useState(false);
     const [linkPageMappings, setLinkPageMappings] = useState([]);
     const [currentPageName, setCurrentPageName] = useState(null);
-    const location = useLocation();
 
     // Set Page-Path Name and Link to help Navigation Bar 
+    const location = useLocation();
     useEffect(() => {
         const currentPath = location.pathname;
         const linkAndPagesWithActiveStatus = linkPageMappingHelper(currentPath)
         setLinkPageMappings(linkAndPagesWithActiveStatus);
-        
+
         const pageName = linkAndPagesWithActiveStatus.find(x => x.isLinkActive);
         setCurrentPageName(pageName.linkPageName);
-    }, [location])
+    }, [location.pathname]);
 
     return (
         <>
@@ -42,17 +53,45 @@ function SimpleAppBar({ props }) {
                         <DehazeIcon />
                     </IconButton>
 
-                    <HeaderLogoAndText currentPageName={currentPageName} />
+                    {/* ==> App Drawer Logo And Text */}
+                    <HeaderLogoAndText
+                        isRightSideComponentOccupied={rightSideComponent ? true : false}
+                        currentPageName={currentPageName}
+                    />
 
-                    {/*Fill Empty Midddle Space*/}
+                    {/*==> Fill Empty Midddle Space */}
                     <Box sx={{ flexGrow: 1 }}></Box>
 
-                    {/* ==> User Profile Avatar  */}
+
+                    {/*==> Right Side Component*/}
+                    {
+                        rightSideComponent === 'VillageSelector' &&
+                        <VillageSelector
+                            setIsVillageSelected={setIsVillageSelected}
+                            handleVillageSelectionChange={handleVillageSelectionChange}
+                        />
+                    }
+
+                    {/* User Profile Avatar  */}
                     <UserProfileActionAvatar />
                 </Toolbar>
+
+                {/* Party Members Tab Bar  */}
+                {
+                    tabSelectionBarVisible &&
+                    <PartyPeoplesSelectionTabBar
+                        selectedTabBarIndex={selectedTabBarIndex}
+                        setSelectedTabBarIndex={setSelectedTabBarIndex}
+                    />
+                }
             </AppBar >
 
-            <Toolbar />
+            {/* Occupy Used Space  */}
+            {
+                tabSelectionBarVisible
+                    ? <Box component={Toolbar} p={0} height={135} />
+                    : <Toolbar />
+            }
 
             {/* Navigation Drawer  */}
             <NavigationDrawer
@@ -63,5 +102,3 @@ function SimpleAppBar({ props }) {
         </>
     )
 }
-
-export default SimpleAppBar

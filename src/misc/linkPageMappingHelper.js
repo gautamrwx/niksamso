@@ -7,12 +7,6 @@ const linkPageMappingHelper = (currentPagePath) => {
             visibleInNavBar: true
         },
         {
-            linkPath: "/ManageVillageMembers",
-            linkPageName: "Manage Village Members",
-            isLinkActive: false,
-            visibleInNavBar: true
-        },
-        {
             linkPath: "/MyAccount",
             linkPageName: "My Account",
             isLinkActive: false,

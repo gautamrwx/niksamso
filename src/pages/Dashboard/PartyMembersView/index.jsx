@@ -14,5 +14,4 @@ function PartyMembersView({ members, openContactDrawer }) {
     </Grid >
 }
 
-
 export default PartyMembersView

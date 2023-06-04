@@ -20,9 +20,11 @@ export const ProfileProvider = ({ children }) => {
 
                     if (user) {
                         userProfileData = {
-                            ...user,
+                            fullName: user.fullName,
+                            profilePic: user.profilePic,
                             uid: authObj.uid,
                             email: authObj.email,
+                            mappedVillGroupKey: user.mappedVillGroupKey
                         }
 
                         setProfile(userProfileData);
@@ -33,10 +35,11 @@ export const ProfileProvider = ({ children }) => {
                     }
                 }).catch((e) => {
                     userProfileData = {
-                        fullName: "",
+                        fullName: "Unknown",
                         profilePic: "",
                         uid: authObj.uid,
                         email: authObj.email,
+                        mappedVillGroupKey: ''
                     }
 
                     setProfile(userProfileData);
