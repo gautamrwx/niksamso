@@ -1,8 +1,9 @@
-import { Box, Button, Container, Drawer, Typography } from "@mui/material";
+import { Box, Button, Container, Drawer, LinearProgress, Typography } from "@mui/material";
 import userLogo from '../../../images/userLogo.png';
 import { Upload } from "@mui/icons-material";
 import { getDownloadURL, getStorage, ref as storageRef, uploadString } from "firebase/storage";
 import resizeImage from 'resize-image'
+import { useEffect, useState } from "react";
 
 export default function ProfilePicViewDrawer({
     anchor,
@@ -12,6 +13,12 @@ export default function ProfilePicViewDrawer({
     profilePicDrawerData,
     handleUploaedImageUrl
 }) {
+
+    const [isLoadingPic, setIsLoadingPic] = useState(false);
+
+    useEffect(() => {
+        setIsLoadingPic(isProfilePicDrawerOpen)
+    }, [isProfilePicDrawerOpen])
 
     /**
      * === Profile Pic File Processing And Uploading ===
@@ -89,7 +96,9 @@ export default function ProfilePicViewDrawer({
                     justifyContent="center"
                 >
                     <Box>
+
                         <Box
+                            onLoad={() => { setIsLoadingPic(false); }}
                             height={300}
                             component="img"
                             src={
@@ -98,6 +107,7 @@ export default function ProfilePicViewDrawer({
                                     : userLogo
                             }
                         />
+                        {isLoadingPic && <LinearProgress />}
                         <Typography textAlign={'center'}>
                             {profilePicDrawerData.name}
                         </Typography>
