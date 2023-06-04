@@ -11,6 +11,7 @@ export default function VillageSelector({
 
     // On DD change Event
     const onVillageSelectionChange = (event, value, reason) => {
+        debugger
         switch (reason) {
             case 'clear':
                 setSelectedDDVillage(null);
@@ -19,7 +20,8 @@ export default function VillageSelector({
                 break;
             case 'selectOption':
                 setSelectedDDVillage(value);
-                handleVillageSelectionChange()
+                handleVillageSelectionChange(value.mappedPartyPeoplesKey);
+                setIsVillageSelected(true);
                 break;
             default:
                 break;
@@ -66,7 +68,7 @@ export default function VillageSelector({
                 options={userDropdownListOption.sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter))}
                 groupBy={(option) => option.firstLetter}
                 getOptionLabel={(option) => option.villageName}
-                renderInput={(params) => <TextField {...params} label="Incharge" />}
+                renderInput={(params) => <TextField {...params} label="Village" />}
             />
         </Box >
     )
