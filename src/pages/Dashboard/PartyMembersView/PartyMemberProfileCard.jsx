@@ -1,16 +1,29 @@
 import { WhatsApp, SmsOutlined, LocalPhoneOutlined } from "@mui/icons-material";
-import { Avatar, Box, Button, CardActions } from "@mui/material";
+import { Avatar, Box, Button, CardActions, IconButton } from "@mui/material";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import userLogo from '../../../images/userLogo.png';
 import cover from '../../../images/cover.jpg';
-
+import { useProfilePicCtx } from "../../../context/selectedProfilePicInfo.context";
 
 function PartyMemberProfileCard({
     memberProfileData,
-    openContactDrawer
+    openContactDrawer,
+    index
 }) {
+    const { setIsProfilePicDrawerOpen, setSelectedProfilePicData } = useProfilePicCtx();
+
+    const handleUserProfilePicView = (selectedIndex, { profilePicThumbnail, profilePic, name }) => {
+        setIsProfilePicDrawerOpen(true);
+        setSelectedProfilePicData({
+            selectedIndex,
+            profilePicThumbnail,
+            profilePic,
+            name
+        });
+    }
+
     return (
         <Card sx={{ minHeight: 120 }}>
             <Box sx={{
@@ -27,10 +40,15 @@ function PartyMemberProfileCard({
                 alignItems="center"
                 mt={-6}
             >
+
                 <Avatar
+                    onClick={() => { handleUserProfilePicView(index, memberProfileData) }}
                     sx={{ bgcolor: 'white', width: 80, height: 80, m: 'auto' }}
-                    alt='U'
-                    src={userLogo}
+                    src={
+                        memberProfileData.profilePicThumbnail && memberProfileData.profilePicThumbnail !== ''
+                            ? memberProfileData.profilePicThumbnail
+                            : userLogo
+                    }
                 />
 
                 <Box display="grid" alignItems="center">

@@ -11,7 +11,6 @@ export default function VillageSelector({
 
     // On DD change Event
     const onVillageSelectionChange = (event, value, reason) => {
-        debugger
         switch (reason) {
             case 'clear':
                 setSelectedDDVillage(null);
