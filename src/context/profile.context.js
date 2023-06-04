@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../misc/firebase';
 import { child, get, ref } from 'firebase/database';
+import logoff from '../misc/logOut';
 
 const profileContext = createContext();
 
@@ -31,21 +32,15 @@ export const ProfileProvider = ({ children }) => {
                         setisLoading(false);
                     }
                     else {
+                        alert('User Not Found In Database');
                         throw Object.assign(new Error('Undef'), { code: 0 });
                     }
                 }).catch((e) => {
-                    userProfileData = {
-                        fullName: "Unknown",
-                        profilePic: "",
-                        uid: authObj.uid,
-                        email: authObj.email,
-                        mappedVillGroupKey: ''
-                    }
-
-                    setProfile(userProfileData);
+                    setProfile(null);
                     setisLoading(false);
                 });
             } else {
+                logoff();
                 setProfile(null);
                 setisLoading(false);
             }

@@ -9,7 +9,6 @@ import { Box, Container, Drawer, IconButton, List, ListItem, ListItemText, Typog
 import { Call, Message, WhatsApp } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import CustomAppBar from '../../components/AppBarComponent/CustomAppBar';
-import { SelectedProfilePicProvider } from '../../context/selectedProfilePicInfo.context';
 
 function Dashboard(props) {
     const [partyPeoples, setPartyPeoples] = useState(null);
@@ -85,7 +84,7 @@ function Dashboard(props) {
             const partyPeoples = snapshot.val();
 
             if (partyPeoples) {
-                setPartyPeoples(partyPeoples);
+                setPartyPeoples({ partyPeopleKey, ...partyPeoples });
             } else {
                 setPartyPeoples(null);
             }
@@ -110,11 +109,10 @@ function Dashboard(props) {
 
             <TabPanel value={selectedTabBarIndex} index={0}>
                 {(partyPeoples && partyPeoples.partyMembers.length > 0)
-                    ? <SelectedProfilePicProvider>
-                        <PartyMembersView
-                            members={partyPeoples.partyMembers}
-                            openContactDrawer={openContactDrawer} />
-                    </SelectedProfilePicProvider>
+                    ? <PartyMembersView
+                        partyPeopleKey={partyPeoples.partyPeopleKey}
+                        members={partyPeoples.partyMembers}
+                        openContactDrawer={openContactDrawer} />
                     : <BlankTextProcessingDisplay
                         isVillageSelected={isVillageSelected}
                         isLoadingPartyPeoples={isLoadingPartyPeoples}

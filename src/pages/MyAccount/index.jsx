@@ -45,7 +45,7 @@ function MyAccount(props) {
         const updates = {}
 
         // 1. Assign User Profile Information
-        updates['/admins/' + profile.uid + '/fullName'] = myProfileInfo.fullName;
+        updates['/users/' + profile.uid + '/fullName'] = myProfileInfo.fullName;
 
         // <==== | Update All Data In Single Shot | ====>
         update(ref(db), updates).then(x => {
