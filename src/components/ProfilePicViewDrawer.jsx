@@ -141,7 +141,7 @@ export default function ProfilePicViewDrawer({
         <Drawer
             anchor={anchor}
             open={isProfilePicDrawerOpen}
-            onClose={handleProfilePicDrawerClose}
+            onClose={null}
         >
             <Container maxWidth="xs">
                 <Box
