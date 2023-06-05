@@ -1,6 +1,7 @@
-import { Box, Divider, List, ListItem, ListItemButton, ListItemText, SwipeableDrawer } from '@mui/material';
+import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer } from '@mui/material';
 import logo from '../../../images/logo.png'
 import { Link } from 'react-router-dom';
+import { CircleSharp } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -38,16 +39,13 @@ function NavigationDrawer({ linkPageMappings, container, isDrowerOpen, setIsDraw
                             item.visibleInNavBar &&
                             <ListItem key={item.linkPath} disablePadding>
                                 <ListItemButton
-                                    disabled={item.isLinkActive}
-                                    sx={{
-                                        "&.Mui-disabled": {
-                                            backgroundColor: "#1769aa",
-                                            color: "white"
-                                        }
-                                    }}
+                                    selected={item.isLinkActive}
                                     component={Link}
                                     to={item.linkPath}
                                 >
+                                    <ListItemIcon>
+                                        <item.drawerIcon />
+                                    </ListItemIcon>
                                     <ListItemText primary={item.linkPageName} />
                                 </ListItemButton>
                             </ListItem>

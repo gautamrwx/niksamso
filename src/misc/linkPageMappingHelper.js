@@ -1,10 +1,13 @@
+import { Home } from "@mui/icons-material";
+
 const linkPageMappingHelper = (currentPagePath) => {
     const linkPageMapiings = [
         {
             linkPath: "/",
             linkPageName: "Dashboard",
             isLinkActive: false,
-            visibleInNavBar: true
+            visibleInNavBar: true,
+            drawerIcon:Home
         },
         {
             linkPath: "/MyAccount",
