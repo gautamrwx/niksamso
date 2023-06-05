@@ -11,7 +11,7 @@ function GeneralMembersView({ members, openContactDrawer }) {
             a = a.toLowerCase();
             b = b.toLowerCase();
             return (a < b) ? -1 : (a > b) ? 1 : 0;
-        })(a.name, b.name);
+        })(a.fullName, b.fullName);
     });
 
     return <Grid container spacing={{ xs: 1, sm: 2, md: 3 }} columns={{ xs: 1, sm: 2, md: 3, lg: 3 }}>

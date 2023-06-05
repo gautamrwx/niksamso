@@ -19,14 +19,14 @@ function Dashboard(props) {
 
     const [contactDrawerInfo, setContactDrawerInfo] = useState({
         isOpen: false,
-        name: '',
+        fullName: '',
         phoneNumbers: []
     });
 
     const openContactDrawer = (profileContactData) => {
         setContactDrawerInfo({
             isOpen: true,
-            name: profileContactData.name,
+            fullName: profileContactData.fullName,
             phoneNumbers: profileContactData.phoneNumbers
         });
     }
@@ -34,7 +34,7 @@ function Dashboard(props) {
     const closeContactDrawer = (profileContactData) => {
         setContactDrawerInfo({
             isOpen: false,
-            name: '',
+            fullName: '',
             phoneNumbers: []
         });
     }
@@ -139,7 +139,7 @@ function Dashboard(props) {
                 <Container maxWidth="xs">
                     <Box>
                         <Typography ml={2} mt={2} fontSize={24}>
-                            {contactDrawerInfo.name}
+                            {contactDrawerInfo.fullName}
                         </Typography>
 
                         <List >

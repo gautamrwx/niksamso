@@ -39,7 +39,7 @@ function GeneralMemberProfileCard({
                     }}
                 >
                     <Typography fontWeight='600' color={'rgb(78 81 84)'} fontSize={18}>
-                        {memberProfileData.name ? memberProfileData.name : 'N/A'}
+                        {memberProfileData.fullName ? memberProfileData.fullName : 'N/A'}
                     </Typography>
                     <Box
                         sx={{
@@ -73,7 +73,7 @@ function GeneralMemberProfileCard({
                             <Button
                                 onClick={() => {
                                     openContactDrawer({
-                                        name: memberProfileData.name ? memberProfileData.name : 'N/A',
+                                        fullName: memberProfileData.fullName ? memberProfileData.fullName : 'N/A',
                                         phoneNumbers: memberProfileData.mobileNumber
                                     })
                                 }}

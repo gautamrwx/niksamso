@@ -42,7 +42,7 @@ function PartyMemberProfileCard({
 
                 <Box display="grid" alignItems="center">
                     <Typography align="center" color={'rgb(78 81 84)'} fontSize={16}>
-                        {memberProfileData.name ? memberProfileData.name : 'N/A'}
+                        {memberProfileData.fullName ? memberProfileData.fullName : 'N/A'}
                     </Typography>
                 </Box>
 
@@ -66,7 +66,7 @@ function PartyMemberProfileCard({
             <CardActions>
                 <Button onClick={() => {
                     openContactDrawer({
-                        name: memberProfileData.name ? memberProfileData.name : 'N/A',
+                        fullName: memberProfileData.fullName ? memberProfileData.fullName : 'N/A',
                         phoneNumbers: memberProfileData.mobileNumber
                     })
                 }} fullWidth size="small">
