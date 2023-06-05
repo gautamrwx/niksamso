@@ -8,9 +8,11 @@ import { db } from "../../../misc/firebase";
 function PartyMembersView({
     partyPeopleKey,
     members,
+    setPartyPeoples,
     openContactDrawer
 }) {
 
+    //=== [Start] Profile Pic Drawer === 
     const [isProfilePicDrawerOpen, setIsProfilePicDrawerOpen] = useState(false);
     const [profilePicDrawerData, setProfilePicDrawerData] = useState({});
     const [selectedProfilePicIndex, setSselectedProfilePicIndex] = useState(null);
@@ -40,13 +42,17 @@ function PartyMembersView({
 
         // <==== | Update All Data In Single Shot | ====>
         update(ref(db), updates).then(x => {
-            //onsuccess
+            setPartyPeoples(prevData => {
+                prevData['partyMembers'][selectedProfilePicIndex]['profilePicFull'] = profilePicFull;
+                prevData['partyMembers'][selectedProfilePicIndex]['profilePicThumbnail'] = profilePicThumbnail;
+
+                return (prevData);
+            })
         }).catch((error) => {
             alert("Failed To Update");
         });
-
-        // Update Image in Local Database
     }
+    //=== [End] Profile Pic Drawer === 
 
     return (
         <>

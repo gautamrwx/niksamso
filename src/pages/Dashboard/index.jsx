@@ -112,7 +112,9 @@ function Dashboard(props) {
                     ? <PartyMembersView
                         partyPeopleKey={partyPeoples.partyPeopleKey}
                         members={partyPeoples.partyMembers}
-                        openContactDrawer={openContactDrawer} />
+                        openContactDrawer={openContactDrawer}
+                        setPartyPeoples={setPartyPeoples}
+                    />
                     : <BlankTextProcessingDisplay
                         isVillageSelected={isVillageSelected}
                         isLoadingPartyPeoples={isLoadingPartyPeoples}
@@ -122,7 +124,8 @@ function Dashboard(props) {
 
             <TabPanel value={selectedTabBarIndex} index={1}>
                 {(partyPeoples && partyPeoples.generalMembers.length > 0)
-                    ? <GeneralMembersView members={partyPeoples.generalMembers}
+                    ? <GeneralMembersView
+                        members={partyPeoples.generalMembers}
                         openContactDrawer={openContactDrawer} />
                     : <BlankTextProcessingDisplay
                         isVillageSelected={isVillageSelected}
