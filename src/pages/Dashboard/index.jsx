@@ -6,7 +6,7 @@ import BlankTextProcessingDisplay from './BlankTextProcessingDisplay';
 import GeneralMembersView from './GeneralMembersView';
 import PartyMembersView from './PartyMembersView';
 import { Box, Container, Drawer, IconButton, List, ListItem, ListItemText, Typography, } from '@mui/material';
-import { Call, Message, WhatsApp } from '@mui/icons-material';
+import { Call, ContentCopy, Message, Share, WhatsApp } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import CustomAppBar from '../../components/AppBarComponent/CustomAppBar';
 
@@ -15,27 +15,38 @@ function Dashboard(props) {
     const [selectedTabBarIndex, setSelectedTabBarIndex] = useState(0);
 
     const [isVillageSelected, setIsVillageSelected] = useState(false);
+    const [selectedVillageName, setSelectedVillageName] = useState(null);
+
     const [isLoadingPartyPeoples, setIsLoadingPartyPeoples] = useState(null);
 
     const [contactDrawerInfo, setContactDrawerInfo] = useState({
         isOpen: false,
         fullName: '',
-        phoneNumbers: []
+        post: '',
+        youthGeneral: '',
+        phoneNumbers: [],
+        villageName: ''
     });
 
     const openContactDrawer = (profileContactData) => {
         setContactDrawerInfo({
             isOpen: true,
             fullName: profileContactData.fullName,
-            phoneNumbers: profileContactData.phoneNumbers
+            post: profileContactData.post,
+            youthGeneral: profileContactData.youthGeneral,
+            phoneNumbers: profileContactData.phoneNumbers,
+            villageName: selectedVillageName,
         });
     }
 
-    const closeContactDrawer = (profileContactData) => {
+    const closeContactDrawer = () => {
         setContactDrawerInfo({
             isOpen: false,
             fullName: '',
-            phoneNumbers: []
+            post: '',
+            youthGeneral: '',
+            phoneNumbers: [],
+            villageName: ''
         });
     }
 
@@ -64,12 +75,31 @@ function Dashboard(props) {
         }
     }
 
-    const handleVillageSelectionChange = (partyPeopleKey = null) => {
+    const handleShareContact = (shareType, { fullName, phoneNumbers, youthGeneral, post, villageName }) => {
+
+        let stringContactInfo = `Name :\n${fullName}\n\nVillage :\n${villageName}\n\nPost :\n${post}\n\n${youthGeneral}\n\nPhone:\n`
+        phoneNumbers.forEach(phoneNumber => {
+            stringContactInfo += String(phoneNumber) + '\n'
+        });
+
+        switch (shareType) {
+            case 'CLIPBOARD':
+                navigator.clipboard.writeText(stringContactInfo);
+                break;
+            case 'SOCIAL':
+                if (!window.plugins) break;
+                window.plugins.socialsharing.shareWithOptions({ message: stringContactInfo }, null, null);
+                break;
+        }
+    }
+
+    const handleVillageSelectionChange = (partyPeopleKey = null, villageName = null) => {
+        setSelectedVillageName(villageName);
+
         if (!partyPeopleKey) {
             setPartyPeoples(null);
             return;
         }
-
         fetchVillagePartyPeoples(partyPeopleKey);
     };
 
@@ -141,9 +171,18 @@ function Dashboard(props) {
             >
                 <Container maxWidth="xs">
                     <Box>
-                        <Typography ml={2} mt={2} fontSize={24}>
-                            {contactDrawerInfo.fullName}
-                        </Typography>
+                        <Box display={'flex'} flexDirection={'row'} ml={1} mr={2} mt={2} mb={2}>
+                            <Typography fontSize={24}>
+                                {contactDrawerInfo.fullName}
+                            </Typography>
+                            <Box flex={1}></Box>
+                            <IconButton onClick={() => handleShareContact('CLIPBOARD', contactDrawerInfo)} sx={{ color: '#4365a3', mr: 1 }}  >
+                                <ContentCopy />
+                            </IconButton>
+                            <IconButton onClick={() => handleShareContact('SOCIAL', contactDrawerInfo)} sx={{ color: '#4365a3' }} >
+                                <Share />
+                            </IconButton>
+                        </Box>
 
                         <List >
                             {contactDrawerInfo.phoneNumbers.map((phone, index) =>

@@ -14,12 +14,12 @@ export default function VillageSelector({
         switch (reason) {
             case 'clear':
                 setSelectedDDVillage(null);
-                handleVillageSelectionChange(null);
+                handleVillageSelectionChange();
                 setIsVillageSelected(false);
                 break;
             case 'selectOption':
                 setSelectedDDVillage(value);
-                handleVillageSelectionChange(value.mappedPartyPeoplesKey);
+                handleVillageSelectionChange(value.mappedPartyPeoplesKey,value.villageName);
                 setIsVillageSelected(true);
                 break;
             default:

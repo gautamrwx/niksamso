@@ -74,6 +74,8 @@ function GeneralMemberProfileCard({
                                 onClick={() => {
                                     openContactDrawer({
                                         fullName: memberProfileData.fullName ? memberProfileData.fullName : 'N/A',
+                                        post: 'General Member',
+                                        youthGeneral: memberProfileData.youthGeneral,
                                         phoneNumbers: memberProfileData.mobileNumber
                                     })
                                 }}

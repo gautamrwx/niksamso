@@ -67,6 +67,8 @@ function PartyMemberProfileCard({
                 <Button onClick={() => {
                     openContactDrawer({
                         fullName: memberProfileData.fullName ? memberProfileData.fullName : 'N/A',
+                        post: memberProfileData.post,
+                        youthGeneral: memberProfileData.youthGeneral,
                         phoneNumbers: memberProfileData.mobileNumber
                     })
                 }} fullWidth size="small">
