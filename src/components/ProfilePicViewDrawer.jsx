@@ -1,6 +1,6 @@
-import { Box, Button, Container, Drawer, LinearProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Drawer, LinearProgress, Typography } from "@mui/material";
 import userLogo from '../images/userLogo.png';
-import { Upload } from "@mui/icons-material";
+import { CameraAlt, Close, Collections } from "@mui/icons-material";
 import { getDownloadURL, getStorage, ref as storageRef, uploadString } from "firebase/storage";
 import resizeImage from 'resize-image'
 import { useEffect, useState } from "react";
@@ -14,11 +14,19 @@ export default function ProfilePicViewDrawer({
     handleUploaedImageUrl
 }) {
 
+    const { fullName, profilePicFull } = profilePicDrawerData;
+
     const [isLoadingPic, setIsLoadingPic] = useState(false);
+    const [currentProfilePic, setCurrentProfilePic] = useState(null);
+    const [isImageUploading, setIsImageUploading] = useState(false);
 
     useEffect(() => {
         setIsLoadingPic(isProfilePicDrawerOpen)
-    }, [isProfilePicDrawerOpen])
+    }, [isProfilePicDrawerOpen]);
+
+    useEffect(() => {
+        setCurrentProfilePic(profilePicFull)
+    }, [profilePicFull]);
 
     /**
      * === Profile Pic File Processing And Uploading ===
@@ -43,6 +51,8 @@ export default function ProfilePicViewDrawer({
     }
 
     const performProfilePicUpload = async (base64Image) => {
+        setIsImageUploading(true);
+
         // Upload Full Pic
         const profilePicFull = await executeImageUpload(
             base64Image,
@@ -60,6 +70,8 @@ export default function ProfilePicViewDrawer({
         );
 
         handleUploaedImageUrl({ profilePicFull, profilePicThumbnail });
+        setCurrentProfilePic(profilePicFull); // Change Image Source of current profile pic.
+        setIsImageUploading(false);
     }
 
     const handleUserProfilePicChange = (event) => {
@@ -83,6 +95,10 @@ export default function ProfilePicViewDrawer({
         }
     }
 
+    const handleCameraButtonPress = () => {
+        // TODO
+    }
+
     return (
         <Drawer
             anchor={anchor}
@@ -102,34 +118,49 @@ export default function ProfilePicViewDrawer({
                             height={300}
                             component="img"
                             src={
-                                profilePicDrawerData.profilePicFull && profilePicDrawerData.profilePicFull !== ''
-                                    ? profilePicDrawerData.profilePicFull
+                                currentProfilePic && currentProfilePic !== ''
+                                    ? currentProfilePic
                                     : userLogo
                             }
                         />
                         {isLoadingPic && <LinearProgress />}
                         <Typography textAlign={'center'}>
-                            {profilePicDrawerData.fullName}
+                            {fullName}
                         </Typography>
 
                         <Box mt={2} mb={2} display={'flex'} justifyContent={'center'}>
-                            <Button>Capture</Button>
-                            <Button
-                                variant="outlined"
-                                component="label">
-                                <Typography>Upload</Typography> <Upload />
-                                <input
-                                    onChange={handleUserProfilePicChange}
-                                    type="file"
-                                    accept=".png, .jpeg, .jpg"
-                                    hidden
-                                />
-                            </Button>
-                            <Button
-                                onClick={handleProfilePicDrawerClose}
-                            >
-                                Cancel
-                            </Button>
+                            {
+                                isImageUploading
+                                    ? <CircularProgress />
+                                    : <>
+                                        <Button
+                                            variant="outlined"
+                                            component="label"
+                                            onClick={handleCameraButtonPress}>
+                                            <CameraAlt />
+                                        </Button>
+                                        <Button
+                                            sx={{ ml: 2 }}
+                                            variant="outlined"
+                                            component="label">
+                                            <Collections />
+                                            <input
+                                                onChange={handleUserProfilePicChange}
+                                                type="file"
+                                                accept=".png, .jpeg, .jpg"
+                                                hidden
+                                            />
+                                        </Button>
+                                        <Button
+                                            sx={{ ml: 2 }}
+                                            variant="outlined"
+                                            color="error"
+                                            component="label"
+                                            onClick={handleProfilePicDrawerClose}>
+                                            <Close />
+                                        </Button>
+                                    </>
+                            }
                         </Box>
                     </Box>
                 </Box>

@@ -23,7 +23,7 @@ function MyAccount(props) {
 
     const handleAvatarClickEvent = (selectedProfileData) => {
         setIsProfilePicDrawerOpen(true);
-        setImageUploadLocation('');
+        setImageUploadLocation(`ProfilePictures/users/${profile.uid}`);
         setProfilePicDrawerData(selectedProfileData);
     }
 
@@ -48,7 +48,12 @@ function MyAccount(props) {
             alert("Failed To Update");
         });
 
-        //== TODO == Update Image in Local Database
+        //== Update Image in Local Database
+        setProfile(prev => ({
+            ...prev,
+            profilePicThumbnail: profilePicThumbnail,
+            profilePicFull: profilePicFull
+        }));
     }
     //=== [End] Profile Pic Drawer === 
 
