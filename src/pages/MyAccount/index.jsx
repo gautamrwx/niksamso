@@ -43,17 +43,15 @@ function MyAccount(props) {
 
         // <==== | Update All Data In Single Shot | ====>
         update(ref(db), updates).then(x => {
-            //onsuccess
+            //== Update Image in Local Database
+            setProfile(prev => ({
+                ...prev,
+                profilePicThumbnail: profilePicThumbnail,
+                profilePicFull: profilePicFull
+            }));
         }).catch((error) => {
             alert("Failed To Update");
         });
-
-        //== Update Image in Local Database
-        setProfile(prev => ({
-            ...prev,
-            profilePicThumbnail: profilePicThumbnail,
-            profilePicFull: profilePicFull
-        }));
     }
     //=== [End] Profile Pic Drawer === 
 
