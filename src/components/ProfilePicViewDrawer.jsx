@@ -98,9 +98,13 @@ export default function ProfilePicViewDrawer({
     const getCameraImage = () => {
         return new Promise((resolve, _) => {
             window.navigator.camera.getPicture(onSuccess, onFail, {
-                quality: 80,
-                targetHeight: 300,
-                targetWidth: 300,
+                quality: 100,
+                sourceType: window.Camera.PictureSourceType.CAMERA,
+                encodingType: window.Camera.EncodingType.JPG,
+                cameraDirection: window.Camera.Direction.BACK,
+                correctOrientation: true,
+                targetHeight: 500,
+                targetWidth: 500,
                 destinationType: window.Camera.DestinationType.DATA_URL
             });
 
@@ -127,7 +131,7 @@ export default function ProfilePicViewDrawer({
         if (!window.navigator.camera) return;
 
         const { successful, capturedBase64Image, message } = await getCameraImage();
-        
+
         if (successful) {
             const image = new Image();
             image.onload = () => { performProfilePicUpload(image) }
