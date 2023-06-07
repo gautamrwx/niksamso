@@ -94,9 +94,7 @@ function Dashboard(props) {
         }
     }
 
-    const handleVillageSelectionChange = (selectedVillage = null) => {
-        debugger;
-        
+    const handleVillageSelectionChange = (selectedVillage = null) => {        
         if (selectedVillage === null || !selectedVillage.mappedPartyPeoplesKey) {
             setSelectedVillageName(null);
             setSelectedVillageKey(null);
