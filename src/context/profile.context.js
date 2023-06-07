@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../misc/firebase';
-import { child, get, ref } from 'firebase/database';
+import { child, get, onValue, ref } from 'firebase/database';
 import logoff from '../misc/logOut';
 
 const profileContext = createContext();
@@ -13,7 +13,8 @@ export const ProfileProvider = ({ children }) => {
         const authUnsub = auth.onAuthStateChanged(authObj => {
             if (authObj) {
                 // Fetch Name And Profile Pic From DataBase
-                get(child(ref(db), "users/" + authObj.uid)).then((snapshot) => {
+                const usersRef = ref(db, "users/" + authObj.uid);
+                onValue(usersRef, (snapshot) => {
                     const user = snapshot.val();
 
                     if (user) {
@@ -31,11 +32,10 @@ export const ProfileProvider = ({ children }) => {
                     }
                     else {
                         alert('User Not Found In Database');
-                        throw Object.assign(new Error('Undef'), { code: 0 });
+                        logoff();
+                        setProfile(null);
+                        setisLoading(false);
                     }
-                }).catch((e) => {
-                    setProfile(null);
-                    setisLoading(false);
                 });
             } else {
                 logoff();
