@@ -19,7 +19,7 @@ export default function VillageSelector({
                 break;
             case 'selectOption':
                 setSelectedDDVillage(value);
-                handleVillageSelectionChange(value.mappedPartyPeoplesKey,value.villageName);
+                handleVillageSelectionChange(value);
                 setIsVillageSelected(true);
                 break;
             default:

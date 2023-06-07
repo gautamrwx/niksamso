@@ -7,6 +7,7 @@ import { db } from "../../../misc/firebase";
 
 function PartyMembersView({
     partyPeopleKey,
+    selectedVillageKey,
     members,
     setPartyPeoples,
     openContactDrawer
@@ -21,7 +22,7 @@ function PartyMembersView({
     const handleAvatarClickEvent = (selectedProfileData, selectedIndex) => {
         setIsProfilePicDrawerOpen(true);
         setSselectedProfilePicIndex(selectedIndex);
-        setImageUploadLocation(`ProfilePictures/PartyMembers/${partyPeopleKey}/${selectedIndex}`);
+        setImageUploadLocation(`ProfilePictures/VillagePartyMembers/${selectedVillageKey}/${selectedIndex}`);
         setProfilePicDrawerData(selectedProfileData);
     }
 

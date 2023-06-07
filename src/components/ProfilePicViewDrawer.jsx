@@ -58,7 +58,7 @@ export default function ProfilePicViewDrawer({
             base64Image,
             300,
             300,
-            String(imageUploadLocation + "/profilePicFull.jpg")
+            String(imageUploadLocation + "_profilePicFull.jpg")
         );
 
         // Upload Thumbnail
@@ -66,7 +66,7 @@ export default function ProfilePicViewDrawer({
             base64Image,
             80,
             80,
-            String(imageUploadLocation + "/profilePicThumbnail.jpg")
+            String(imageUploadLocation + "_profilePicThumbnail.jpg")
         );
 
         handleUploaedImageUrl({ profilePicFull, profilePicThumbnail });

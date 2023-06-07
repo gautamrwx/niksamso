@@ -16,6 +16,7 @@ function Dashboard(props) {
 
     const [isVillageSelected, setIsVillageSelected] = useState(false);
     const [selectedVillageName, setSelectedVillageName] = useState(null);
+    const [selectedVillageKey, setSelectedVillageKey] = useState(null);
 
     const [isLoadingPartyPeoples, setIsLoadingPartyPeoples] = useState(null);
 
@@ -93,21 +94,26 @@ function Dashboard(props) {
         }
     }
 
-    const handleVillageSelectionChange = (partyPeopleKey = null, villageName = null) => {
-        setSelectedVillageName(villageName);
-
-        if (!partyPeopleKey) {
-            setPartyPeoples(null);
+    const handleVillageSelectionChange = (selectedVillage = null) => {
+        debugger;
+        
+        if (selectedVillage === null || !selectedVillage.mappedPartyPeoplesKey) {
+            setSelectedVillageName(null);
+            setSelectedVillageKey(null);
+            fetchVillagePartyPeoples(null);
             return;
         }
-        fetchVillagePartyPeoples(partyPeopleKey);
+
+        const { villageName, mappedPartyPeoplesKey, villageKey } = selectedVillage;
+        setSelectedVillageName(villageName);
+        setSelectedVillageKey(villageKey);
+        fetchVillagePartyPeoples(mappedPartyPeoplesKey);
     };
 
     // ===< Business Logic [Start] >===
 
     // Fetch Village Party Peoples  
     const fetchVillagePartyPeoples = (partyPeopleKey) => {
-
         setIsLoadingPartyPeoples(true) // Start Processing
 
         get(child(ref(db), "partyPeoples/" + partyPeopleKey)).then((snapshot) => {
@@ -140,6 +146,7 @@ function Dashboard(props) {
             <TabPanel value={selectedTabBarIndex} index={0}>
                 {(partyPeoples && partyPeoples.partyMembers.length > 0)
                     ? <PartyMembersView
+                        selectedVillageKey={selectedVillageKey}
                         partyPeopleKey={partyPeoples.partyPeopleKey}
                         members={partyPeoples.partyMembers}
                         openContactDrawer={openContactDrawer}
