@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { child, get, ref } from 'firebase/database';
 import { db } from '../../misc/firebase';
 import TabPanel from './TabPanel';
-import BlankTextProcessingDisplay from './BlankTextProcessingDisplay';
 import GeneralMembersView from './GeneralMembersView';
 import PartyMembersView from './PartyMembersView';
 import { Box, Container, Drawer, IconButton, List, ListItem, ListItemText, Typography, } from '@mui/material';
 import { Call, ContentCopy, Message, Share, WhatsApp } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import CustomAppBar from '../../components/AppBarComponent/CustomAppBar';
+import FullScreenMessageText from '../../components/FullScreenMessageText';
 
 function Dashboard(props) {
     const [partyPeoples, setPartyPeoples] = useState(null);
@@ -94,7 +94,7 @@ function Dashboard(props) {
         }
     }
 
-    const handleVillageSelectionChange = (selectedVillage = null) => {        
+    const handleVillageSelectionChange = (selectedVillage = null) => {
         if (selectedVillage === null || !selectedVillage.mappedPartyPeoplesKey) {
             setSelectedVillageName(null);
             setSelectedVillageKey(null);
@@ -141,6 +141,20 @@ function Dashboard(props) {
                 setSelectedTabBarIndex={setSelectedTabBarIndex}
             />
 
+            {
+                isLoadingPartyPeoples &&
+                <FullScreenMessageText showLoader>
+                    Loading
+                </FullScreenMessageText>
+            }
+
+            {
+                !isLoadingPartyPeoples && !isVillageSelected &&
+                <FullScreenMessageText >
+                    Please Select Any Village
+                </FullScreenMessageText>
+            }
+
             <TabPanel value={selectedTabBarIndex} index={0}>
                 {(partyPeoples && partyPeoples.partyMembers.length > 0)
                     ? <PartyMembersView
@@ -150,10 +164,7 @@ function Dashboard(props) {
                         openContactDrawer={openContactDrawer}
                         setPartyPeoples={setPartyPeoples}
                     />
-                    : <BlankTextProcessingDisplay
-                        isVillageSelected={isVillageSelected}
-                        isLoadingPartyPeoples={isLoadingPartyPeoples}
-                    />
+                    : <FullScreenMessageText > No Data </FullScreenMessageText>
                 }
             </TabPanel>
 
@@ -162,10 +173,7 @@ function Dashboard(props) {
                     ? <GeneralMembersView
                         members={partyPeoples.generalMembers}
                         openContactDrawer={openContactDrawer} />
-                    : <BlankTextProcessingDisplay
-                        isVillageSelected={isVillageSelected}
-                        isLoadingPartyPeoples={isLoadingPartyPeoples}
-                    />
+                    : <FullScreenMessageText >  No Data </FullScreenMessageText>
                 }
             </TabPanel>
 
