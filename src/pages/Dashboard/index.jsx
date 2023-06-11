@@ -91,10 +91,14 @@ function Dashboard(props) {
                 if (!window.plugins) break;
                 window.plugins.socialsharing.shareWithOptions({ message: stringContactInfo }, null, null);
                 break;
+            default:
+                break;
         }
     }
 
     const handleVillageSelectionChange = (selectedVillage = null) => {
+        setPartyPeoples(null); // Reset old data before new loading
+
         if (selectedVillage === null || !selectedVillage.mappedPartyPeoplesKey) {
             setSelectedVillageName(null);
             setSelectedVillageKey(null);
@@ -155,27 +159,37 @@ function Dashboard(props) {
                 </FullScreenMessageText>
             }
 
-            <TabPanel value={selectedTabBarIndex} index={0}>
-                {(partyPeoples && partyPeoples.partyMembers.length > 0)
-                    ? <PartyMembersView
-                        selectedVillageKey={selectedVillageKey}
-                        partyPeopleKey={partyPeoples.partyPeopleKey}
-                        members={partyPeoples.partyMembers}
-                        openContactDrawer={openContactDrawer}
-                        setPartyPeoples={setPartyPeoples}
-                    />
-                    : <FullScreenMessageText > No Data </FullScreenMessageText>
-                }
-            </TabPanel>
+            {
+                !isLoadingPartyPeoples && !isVillageSelected
+                    ?
+                    <FullScreenMessageText >
+                        Please Select Any Village
+                    </FullScreenMessageText>
+                    :
+                    <>
+                        <TabPanel value={selectedTabBarIndex} index={0}>
+                            {(partyPeoples && partyPeoples.partyMembers.length > 0)
+                                ? <PartyMembersView
+                                    selectedVillageKey={selectedVillageKey}
+                                    partyPeopleKey={partyPeoples.partyPeopleKey}
+                                    members={partyPeoples.partyMembers}
+                                    openContactDrawer={openContactDrawer}
+                                    setPartyPeoples={setPartyPeoples}
+                                />
+                                : <FullScreenMessageText >  No Data </FullScreenMessageText>
+                            }
+                        </TabPanel>
 
-            <TabPanel value={selectedTabBarIndex} index={1}>
-                {(partyPeoples && partyPeoples.generalMembers.length > 0)
-                    ? <GeneralMembersView
-                        members={partyPeoples.generalMembers}
-                        openContactDrawer={openContactDrawer} />
-                    : <FullScreenMessageText >  No Data </FullScreenMessageText>
-                }
-            </TabPanel>
+                        <TabPanel value={selectedTabBarIndex} index={1}>
+                            {(partyPeoples && partyPeoples.generalMembers.length > 0)
+                                ? <GeneralMembersView
+                                    members={partyPeoples.generalMembers}
+                                    openContactDrawer={openContactDrawer} />
+                                : <FullScreenMessageText >  No Data </FullScreenMessageText>
+                            }
+                        </TabPanel>
+                    </>
+            }
 
             <Drawer
                 anchor={'bottom'}
