@@ -1,7 +1,6 @@
 import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, SwipeableDrawer } from '@mui/material';
 import logo from '../../../images/logo.png'
 import { Link } from 'react-router-dom';
-import { CircleSharp } from '@mui/icons-material';
 
 const drawerWidth = 240;
 

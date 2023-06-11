@@ -4,13 +4,12 @@ import { getDatabase } from "firebase/database";
 import { getFirestore } from "firebase/firestore";
 
 const config = {
-    apiKey: "AIzaSyDVZuh-qicfH-MBECtpCi4UY-OT41_GauI",
-    authDomain: "niksamso-test.firebaseapp.com",
-    projectId: "niksamso-test",
-    storageBucket: "niksamso-test.appspot.com",
-    messagingSenderId: "19208849233",
-    appId: "1:19208849233:web:a8dd2cbc5598c8e18f3570",
-    measurementId: "G-37610VZ1F1"
+    apiKey: "AIzaSyAtMMUtzyav-51BsTPZoAUgggv7jfVSNvM",
+    authDomain: "nikasamso-live-a7cb2.firebaseapp.com",
+    projectId: "nikasamso-live-a7cb2",
+    storageBucket: "nikasamso-live-a7cb2.appspot.com",
+    messagingSenderId: "463608435944",
+    appId: "1:463608435944:web:9c75d1d21b5ef5dd3ca55d"
 };
 
 const app = initializeApp(config);

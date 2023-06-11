@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { auth, db } from '../misc/firebase';
-import { child, get, onValue, ref } from 'firebase/database';
+import { onValue, ref } from 'firebase/database';
 import logoff from '../misc/logOut';
 
 const profileContext = createContext();
