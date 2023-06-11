@@ -14,8 +14,6 @@ export default function ProfilePicViewDrawer({
     handleUploaedImageUrl
 }) {
 
-    const { fullName, profilePicFull } = profilePicDrawerData;
-
     const [isLoadingPic, setIsLoadingPic] = useState(false);
     const [currentProfilePic, setCurrentProfilePic] = useState(null);
     const [isImageUploading, setIsImageUploading] = useState(false);
@@ -25,8 +23,8 @@ export default function ProfilePicViewDrawer({
     }, [isProfilePicDrawerOpen]);
 
     useEffect(() => {
-        setCurrentProfilePic(profilePicFull)
-    }, [profilePicFull]);
+        setCurrentProfilePic(profilePicDrawerData.profilePicFull)
+    }, [profilePicDrawerData]);
 
     /**
      * === Profile Pic File Processing And Uploading ===
@@ -167,7 +165,7 @@ export default function ProfilePicViewDrawer({
                         />
                         {isLoadingPic && <LinearProgress />}
                         <Typography textAlign={'center'}>
-                            {fullName}
+                            {profilePicDrawerData.fullName}
                         </Typography>
 
                         <Box mt={2} mb={2} display={'flex'} justifyContent={'center'}>
